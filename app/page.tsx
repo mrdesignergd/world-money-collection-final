@@ -1,101 +1,109 @@
 import type { CSSProperties } from "react";
+import CollectionCatalog from "./CollectionCatalog";
 import MobileNav from "./MobileNav";
 import ScrollReveal from "./ScrollReveal";
+import { collection } from "../data/collection";
 
-const navItems = ["О коллекции", "Монеты", "Купюры", "Галерея", "FAQ"];
-
-const stats = [
-  { value: "25+", label: "монет" },
-  { value: "10+", label: "стран" },
-  { value: "5+", label: "купюр" },
-  { value: "1", label: "онлайн-музей" },
+const navLinks = [
+  { label: "О коллекции", href: "#about" },
+  { label: "Монеты", href: "#coins" },
+  { label: "Банкноты", href: "#banknotes" },
+  { label: "Блистеры", href: "#blisters" },
+  { label: "Интересные факты", href: "#facts" },
+  { label: "Контакты", href: "#contacts" },
 ];
 
-const coins = [
+const collectionSections = [
   {
-    name: "Памятная монета Европы",
-    country: "Франция",
-    year: "2002",
-    detail: "Лаконичный дизайн, тонкий рельеф и история новой валютной эпохи.",
+    title: "Банкноты",
+    href: "#banknotes",
+    description: "Бумажные деньги, страны, серии и детали дизайна.",
   },
   {
-    name: "Классический пенни",
-    country: "Великобритания",
-    year: "1998",
-    detail: "Небольшая монета с узнаваемым профилем и теплым медным оттенком.",
+    title: "Монеты",
+    href: "#coins",
+    description: "Металлические экземпляры, номиналы, годы выпуска и страны.",
   },
   {
-    name: "Монета путешественника",
-    country: "Турция",
-    year: "2015",
-    detail: "Современная чеканка, привезенная как память о поездке.",
-  },
-];
-
-const banknotes = [
-  {
-    name: "Молочная купюра",
-    country: "Казахстан",
-    tone: "Бирюзовые и золотые элементы",
-  },
-  {
-    name: "Городская серия",
-    country: "Польша",
-    tone: "Архитектура, тонкие линии и защитные узоры",
-  },
-  {
-    name: "Исторический портрет",
-    country: "США",
-    tone: "Классическая палитра и музейная фактура",
+    title: "Блистеры",
+    href: "#blisters",
+    description: "Тематические выпуски и коллекционные наборы.",
   },
 ];
 
 const stories = [
   "Самые маленькие номиналы часто рассказывают о повседневной жизни страны лучше редких юбилейных выпусков.",
-  "На купюрах можно встретить скрытые элементы: микротекст, водяные знаки и орнаменты, видимые только под углом.",
+  "На банкнотах можно встретить скрытые элементы: микротекст, водяные знаки и орнаменты, видимые только под углом.",
   "Монеты из путешествий сохраняют не только стоимость, но и момент: город, маршрут, разговор или случайную находку.",
 ];
 
-const galleryTiles = [
-  "Редкие монеты",
-  "Купюры Азии",
-  "Европейские выпуски",
-  "Памятные серии",
-  "Детали чеканки",
-  "Будущие находки",
-];
-
-const faqs = [
+const contacts = [
   {
-    question: "Это настоящая коллекция?",
-    answer: "Да, сайт задуман как личный онлайн-каталог для монет и купюр из разных стран.",
+    label: "WhatsApp",
+    value: "+7 778 386 63 88",
+    href: "https://wa.me/77783866388",
+    icon: "whatsapp",
   },
   {
-    question: "Можно ли будет добавить фотографии?",
-    answer: "Да, галерея уже подготовлена под будущие снимки коллекции.",
+    label: "Instagram",
+    value: "mr.designer.gd",
+    href: "https://www.instagram.com/mr.designer.gd/",
+    icon: "instagram",
   },
   {
-    question: "Нужен ли сервер или база данных?",
-    answer: "Пока нет. Весь контент находится прямо в коде сайта.",
+    label: "Email",
+    value: "mr.designer.gd@gmail.com",
+    href: "mailto:mr.designer.gd@gmail.com",
+    icon: "email",
   },
 ];
 
-function sectionId(label: string) {
-  if (label === "О коллекции") return "about";
-  if (label === "Монеты") return "coins";
-  if (label === "Купюры") return "banknotes";
-  if (label === "Галерея") return "gallery";
-  return "faq";
-}
+const stats = [
+  {
+    value: collection.filter((item) => item.category === "coin").length,
+    label: "Монет",
+  },
+  {
+    value: collection.filter((item) => item.category === "banknote").length,
+    label: "Банкнот",
+  },
+  {
+    value: collection.filter((item) => item.category === "blister").length,
+    label: "Блистеров",
+  },
+  {
+    value: new Set(collection.map((item) => item.country).filter(Boolean)).size,
+    label: "Стран",
+  },
+];
 
-function sectionHref(label: string) {
-  return `#${sectionId(label)}`;
-}
+function ContactIcon({ type }: { type: string }) {
+  if (type === "instagram") {
+    return (
+      <>
+        <rect x="5.25" y="5.25" width="13.5" height="13.5" rx="4.2" />
+        <circle cx="12" cy="12" r="3.3" />
+        <circle cx="16.35" cy="7.65" r="0.55" />
+      </>
+    );
+  }
 
-const navLinks = navItems.map((item) => ({
-  label: item,
-  href: sectionHref(item),
-}));
+  if (type === "email") {
+    return (
+      <>
+        <rect x="4.75" y="6.5" width="14.5" height="11" rx="2.4" />
+        <path d="m6.2 8.4 5.8 4.3 5.8-4.3" />
+      </>
+    );
+  }
+
+  return (
+    <>
+      <path d="M7.25 18.15 5.8 20l.45-2.55A7.05 7.05 0 1 1 9 19.1" />
+      <path d="M9.65 8.75c.2-.25.45-.32.75-.2l.95.38c.3.12.43.38.32.7l-.28.78c-.08.23-.03.45.14.62.58.7 1.25 1.27 2 1.72.23.13.45.13.66-.02l.68-.5c.27-.2.55-.17.8.06l.78.72c.24.22.3.5.13.78-.27.46-.63.82-1.08 1.08-.34.2-.75.27-1.22.2-1.35-.2-2.62-.88-3.8-2.03-1.17-1.14-1.88-2.38-2.13-3.7-.08-.42.02-.78.3-1.1l.52-.6Z" />
+    </>
+  );
+}
 
 export default function Home() {
   return (
@@ -114,13 +122,13 @@ export default function Home() {
             </span>
           </a>
           <div className="hidden items-center gap-1 md:flex">
-            {navItems.map((item) => (
+            {navLinks.map((item) => (
               <a
-                key={item}
-                href={sectionHref(item)}
-                className="rounded-full px-4 py-2 text-sm text-[#efe8d0]/80 transition hover:bg-[#193e2f] hover:text-[#f2cf7d]"
+                key={item.href}
+                href={item.href}
+                className="rounded-full px-3 py-2 text-sm text-[#efe8d0]/80 transition hover:bg-[#193e2f] hover:text-[#f2cf7d] lg:px-4"
               >
-                {item}
+                {item.label}
               </a>
             ))}
           </div>
@@ -143,16 +151,10 @@ export default function Home() {
           </p>
           <div data-hero-reveal style={{ "--hero-delay": "330ms" } as CSSProperties} className="mt-8 flex flex-col gap-3 sm:mt-9 sm:flex-row sm:gap-4">
             <a
-              href="#coins"
+              href="#collection"
               className="w-full rounded-full bg-[#d8b45f] px-5 py-4 text-center font-bold text-[#101311] shadow-[0_16px_45px_rgba(216,180,95,0.24)] transition hover:-translate-y-1 hover:bg-[#f2cf7d] sm:w-auto sm:px-7"
             >
               Смотреть коллекцию
-            </a>
-            <a
-              href="#gallery"
-              className="w-full rounded-full border border-[#efe8d0]/25 bg-[#efe8d0]/8 px-5 py-4 text-center font-bold text-white transition hover:-translate-y-1 hover:border-[#d8b45f] hover:text-[#f2cf7d] sm:w-auto sm:px-7"
-            >
-              Открыть музей монет
             </a>
           </div>
         </div>
@@ -186,7 +188,7 @@ export default function Home() {
             </div>
             <div className="mt-6 h-12 rounded-xl bg-[repeating-linear-gradient(135deg,#173d2d_0_8px,#1f573f_8px_16px)] opacity-90 sm:mt-10 sm:h-16" />
             <p className="mt-4 text-xs leading-5 text-[#173d2d]/70 sm:mt-5 sm:text-sm sm:leading-6">
-              Место для будущей купюры, страны, года выпуска и заметки о находке.
+              Место для будущей банкноты, страны, года выпуска и заметки о находке.
             </p>
           </div>
 
@@ -231,10 +233,10 @@ export default function Home() {
             </h2>
           </div>
           <p className="text-base leading-7 text-[#efe8d0]/82 sm:text-lg sm:leading-8">
-            Коллекция объединяет монеты и купюры, которые хочется рассматривать
-            как предметы культуры: металл, бумагу, портреты, гербы, защитные
-            узоры и следы времени. Этот сайт станет витриной для любимых
-            экземпляров и аккуратным каталогом будущих пополнений.
+            Коллекция объединяет монеты, банкноты и блистеры, которые хочется
+            рассматривать как предметы культуры: металл, бумагу, портреты,
+            гербы, защитные узоры и следы времени. Этот сайт станет витриной
+            для любимых экземпляров и аккуратным каталогом будущих пополнений.
           </p>
         </div>
       </section>
@@ -247,7 +249,9 @@ export default function Home() {
             data-reveal-delay={index * 80}
             className="rounded-lg border border-[#d8b45f]/18 bg-[#efe8d0]/7 p-4 transition hover:-translate-y-1 hover:border-[#d8b45f]/55 hover:bg-[#173d2d] sm:p-6"
           >
-            <p className="text-3xl font-black text-[#f2cf7d] sm:text-4xl">{item.value}</p>
+            <p className="text-3xl font-black text-[#f2cf7d] sm:text-4xl">
+              {item.value}
+            </p>
             <p className="mt-2 text-xs uppercase tracking-[0.16em] text-[#efe8d0]/65 sm:text-sm sm:tracking-[0.2em]">
               {item.label}
             </p>
@@ -255,72 +259,42 @@ export default function Home() {
         ))}
       </section>
 
-      <section id="coins" className="relative z-10 mx-auto max-w-7xl px-5 py-12 sm:py-16 lg:px-8">
-        <div data-reveal className="mb-8 flex flex-col justify-between gap-4 md:mb-10 md:flex-row md:items-end">
-          <div>
+      <section id="collection" className="relative z-10 border-y border-[#d8b45f]/10 bg-[#173d2d]">
+        <div className="mx-auto max-w-7xl px-5 py-14 sm:py-20 lg:px-8">
+          <div data-reveal className="mb-8">
             <p className="text-sm font-bold uppercase tracking-[0.28em] text-[#f2cf7d]">
-              Монеты
+              Коллекция
             </p>
             <h2 className="mt-4 text-3xl font-black text-white sm:text-4xl">
-              Избранные экземпляры
+              Выберите раздел коллекции
             </h2>
           </div>
-          <p className="max-w-xl text-[#efe8d0]/70">
-            Карточки можно расширить фотографиями, редкостью, материалом и
-            личными заметками.
-          </p>
-        </div>
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {coins.map((coin, index) => (
-            <article
-              key={coin.name}
-              data-reveal
-              data-reveal-delay={index * 110}
-              className="group rounded-lg border border-[#d8b45f]/16 bg-[#173d2d] p-5 transition hover:-translate-y-2 hover:border-[#d8b45f]/60 hover:shadow-[0_24px_65px_rgba(0,0,0,0.28)] sm:p-6"
-            >
-              <div className="mb-8 grid size-24 place-items-center rounded-full border-[10px] border-[#d8b45f] bg-[#10251d] text-3xl font-black text-[#f2cf7d] transition group-hover:rotate-12">
-                ¤
-              </div>
-              <p className="text-sm font-bold uppercase tracking-[0.22em] text-[#f2cf7d]">
-                {coin.country} · {coin.year}
-              </p>
-              <h3 className="mt-3 text-xl font-black text-white sm:text-2xl">{coin.name}</h3>
-              <p className="mt-4 leading-7 text-[#efe8d0]/72">{coin.detail}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section id="banknotes" className="relative z-10 bg-[#efe8d0] px-5 py-14 text-[#101311] sm:py-16 lg:px-8">
-        <div className="mx-auto max-w-7xl py-4">
-          <div data-reveal>
-          <p className="text-sm font-black uppercase tracking-[0.28em] text-[#173d2d]">
-            Купюры
-          </p>
-          <h2 className="mt-4 text-3xl font-black sm:text-4xl">Бумажные истории</h2>
-          </div>
-          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:mt-10 lg:grid-cols-3">
-            {banknotes.map((note, index) => (
-              <article
-                key={note.name}
+          <div className="grid gap-5 md:grid-cols-3">
+            {collectionSections.map((item, index) => (
+              <a
+                key={item.href}
+                href={item.href}
                 data-reveal
-                data-reveal-delay={index * 110}
-                className="rounded-lg border border-[#173d2d]/18 bg-white/58 p-5 transition hover:-translate-y-2 hover:bg-white sm:p-6"
+                data-reveal-delay={index * 100}
+                className="group rounded-lg border border-[#d8b45f]/18 bg-[#101311]/58 p-6 transition hover:-translate-y-2 hover:border-[#d8b45f]/65 hover:bg-[#10251d]"
               >
-                <div className="mb-6 h-32 rounded-md border border-[#173d2d]/20 bg-[linear-gradient(135deg,#173d2d_0%,#173d2d_28%,#d8b45f_28%,#d8b45f_34%,#f8f5ea_34%,#f8f5ea_100%)]" />
-                <p className="font-bold text-[#173d2d]">{note.country}</p>
-                <h3 className="mt-2 text-xl font-black sm:text-2xl">{note.name}</h3>
-                <p className="mt-3 leading-7 text-[#101311]/68">{note.tone}</p>
-              </article>
+                <span className="grid size-14 place-items-center rounded-full border border-[#d8b45f]/45 bg-[#173d2d] text-xl font-black text-[#f2cf7d] transition group-hover:scale-105">
+                  {index + 1}
+                </span>
+                <h3 className="mt-8 text-2xl font-black text-white">{item.title}</h3>
+                <p className="mt-4 leading-7 text-[#efe8d0]/72">{item.description}</p>
+              </a>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="relative z-10 mx-auto max-w-7xl px-5 py-12 sm:py-16 lg:px-8">
+      <CollectionCatalog items={collection} />
+
+      <section id="facts" className="relative z-10 mx-auto max-w-7xl px-5 py-12 sm:py-16 lg:px-8">
         <div data-reveal>
           <p className="text-sm font-bold uppercase tracking-[0.28em] text-[#f2cf7d]">
-            Факты
+            Интересные факты
           </p>
           <h2 className="mt-4 text-3xl font-black text-white sm:text-4xl">
             Интересные истории о деньгах
@@ -337,95 +311,50 @@ export default function Home() {
               <span className="text-sm font-black text-[#f2cf7d]">
                 0{index + 1}
               </span>
-              <p className="mt-5 text-base leading-7 text-[#efe8d0]/82 sm:text-lg sm:leading-8">{story}</p>
+              <p className="mt-5 text-base leading-7 text-[#efe8d0]/82 sm:text-lg sm:leading-8">
+                {story}
+              </p>
             </article>
           ))}
         </div>
       </section>
 
-      <section id="gallery" className="relative z-10 border-y border-[#d8b45f]/10 bg-[#173d2d]">
+      <section id="contacts" className="relative z-10 border-t border-[#d8b45f]/10 bg-[#173d2d]">
         <div className="mx-auto max-w-7xl px-5 py-14 sm:py-20 lg:px-8">
-          <div data-reveal className="mb-8 flex flex-col justify-between gap-4 md:mb-10 md:flex-row md:items-end">
-            <div>
-              <p className="text-sm font-bold uppercase tracking-[0.28em] text-[#f2cf7d]">
-                Галерея
-              </p>
-              <h2 className="mt-4 text-3xl font-black text-white sm:text-4xl">
-                Место для будущих фото
-              </h2>
-            </div>
-            <p className="max-w-lg text-[#efe8d0]/72">
-              Сетка уже готова для снимков монет, купюр, альбомов и деталей.
+          <div data-reveal className="mb-8 text-center">
+            <p className="text-sm font-bold uppercase tracking-[0.28em] text-[#f2cf7d]">
+              Контакты
             </p>
+            <h2 className="mt-4 text-3xl font-black text-white sm:text-4xl">
+              Связаться с коллекционером
+            </h2>
           </div>
-          <div className="grid auto-rows-[150px] gap-4 sm:grid-cols-2 sm:auto-rows-[170px] md:grid-cols-3 md:auto-rows-[180px]">
-            {galleryTiles.map((tile, index) => (
-              <div
-                key={tile}
+          <div className="grid gap-5 md:grid-cols-3">
+            {contacts.map((item, index) => (
+              <a
+                key={item.href}
+                href={item.href}
+                target={item.href.startsWith("http") ? "_blank" : undefined}
+                rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined}
                 data-reveal
-                data-reveal-delay={index * 75}
-                className={`group rounded-lg border border-[#d8b45f]/20 bg-[#101311]/58 p-5 transition hover:-translate-y-1 hover:border-[#d8b45f]/65 ${
-                  index === 0 || index === 5 ? "md:row-span-2" : ""
-                }`}
+                data-reveal-delay={index * 100}
+                className="group rounded-lg border border-[#d8b45f]/18 bg-[#101311]/58 p-6 text-center transition hover:-translate-y-2 hover:border-[#d8b45f]/65"
               >
-                <div className="flex h-full items-end rounded-md bg-[linear-gradient(135deg,rgba(216,180,95,0.24),rgba(248,245,234,0.08),rgba(16,19,17,0.35))] p-5">
-                  <p className="font-bold text-white transition group-hover:text-[#f2cf7d]">
-                    {tile}
-                  </p>
-                </div>
-              </div>
+                <svg
+                  viewBox="0 0 24 24"
+                  className="mx-auto size-6 fill-none stroke-[#efe8d0] transition group-hover:scale-110 group-hover:stroke-[#f2cf7d]"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <ContactIcon type={item.icon} />
+                </svg>
+                <h3 className="mt-5 text-xl font-black text-white">{item.label}</h3>
+                <p className="mt-2 break-words text-[#efe8d0]/72">{item.value}</p>
+              </a>
             ))}
           </div>
-        </div>
-      </section>
-
-      <section id="faq" className="relative z-10 mx-auto max-w-4xl px-5 py-14 sm:py-20">
-        <div data-reveal>
-          <p className="text-center text-sm font-bold uppercase tracking-[0.28em] text-[#f2cf7d]">
-            FAQ
-          </p>
-          <h2 className="mt-4 text-center text-3xl font-black text-white sm:text-4xl">
-            Частые вопросы
-          </h2>
-        </div>
-        <div className="mt-8 space-y-4 sm:mt-10">
-          {faqs.map((faq, index) => (
-            <details
-              key={faq.question}
-              data-reveal
-              data-reveal-delay={index * 90}
-              className="group rounded-lg border border-[#d8b45f]/16 bg-[#173d2d] p-5 open:border-[#d8b45f]/55 sm:p-6"
-            >
-              <summary className="cursor-pointer list-none text-lg font-black text-white sm:text-xl">
-                {faq.question}
-                <span className="float-right text-[#f2cf7d] transition group-open:rotate-45">
-                  +
-                </span>
-              </summary>
-              <p className="mt-4 leading-7 text-[#efe8d0]/75">{faq.answer}</p>
-            </details>
-          ))}
-        </div>
-      </section>
-
-      <section className="relative z-10 px-5 pb-12 sm:pb-16 lg:px-8">
-        <div data-reveal className="mx-auto max-w-7xl rounded-lg border border-[#d8b45f]/25 bg-[#efe8d0] px-5 py-12 text-center text-[#101311] md:px-10 md:py-14">
-          <p className="text-sm font-black uppercase tracking-[0.28em] text-[#173d2d]">
-            World Money Collection
-          </p>
-          <h2 className="mx-auto mt-4 max-w-3xl text-3xl font-black sm:text-4xl">
-            Начни превращать коллекцию в настоящий цифровой музей
-          </h2>
-          <p className="mx-auto mt-5 max-w-2xl leading-7 text-[#101311]/70">
-            Добавляй фотографии, страны, годы выпуска, редкость и личные истории
-            к каждому экспонату.
-          </p>
-          <a
-            href="#about"
-            className="mt-8 inline-flex w-full justify-center rounded-full bg-[#173d2d] px-5 py-4 font-bold text-white transition hover:-translate-y-1 hover:bg-[#10251d] hover:text-[#f2cf7d] sm:w-auto sm:px-7"
-          >
-            Вернуться к коллекции
-          </a>
         </div>
       </section>
     </main>

@@ -157,7 +157,12 @@ export default function Home() {
   ];
 
   return (
-    <main className="min-h-screen overflow-hidden bg-[#101311] text-[#f8f5ea]">
+    <main
+      lang={language === "kz" ? "kk" : language}
+      className={`min-h-screen overflow-hidden bg-[#101311] text-[#f8f5ea] ${
+        language === "kz" ? "language-kz" : ""
+      }`}
+    >
       <ScrollReveal />
       <div className="pointer-events-none fixed inset-0 opacity-70 [background:radial-gradient(circle_at_18%_12%,rgba(216,180,95,0.13),transparent_28%),radial-gradient(circle_at_80%_0%,rgba(28,76,54,0.45),transparent_30%),linear-gradient(180deg,#101311_0%,#171a17_48%,#0d100e_100%)]" />
 

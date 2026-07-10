@@ -17,7 +17,50 @@ body {
   margin: 0;
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family:
+    Inter,
+    "Noto Sans",
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Arial,
+    sans-serif;
+  font-synthesis-weight: none;
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.language-kz {
+  font-family:
+    Inter,
+    "Noto Sans",
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Arial,
+    sans-serif;
+}
+
+.language-kz .font-black {
+  font-weight: 800;
+}
+
+.language-kz h1,
+.language-kz h2,
+.language-kz h3 {
+  line-height: 1.16;
+}
+
+.language-kz h1 {
+  line-height: 1.12;
+}
+
+.language-kz button h3,
+.language-kz article h3 {
+  line-height: 1.2;
 }
 
 [data-reveal] {

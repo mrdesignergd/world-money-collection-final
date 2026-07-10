@@ -1,3 +1,5 @@
+import type { LocalizedList, LocalizedText } from "./translations";
+
 export type CollectionCategory = "coin" | "banknote" | "blister";
 
 export type Continent =
@@ -19,12 +21,12 @@ export type BlisterTheme =
 type BaseItem = {
   id: string;
   category: CollectionCategory;
-  title: string;
-  description: string;
+  title: LocalizedText;
+  description: LocalizedText;
   image: string;
   addedAt: string;
   updatedAt: string;
-  tags: string[];
+  tags: LocalizedList;
 };
 
 export type MoneyItem = BaseItem & {

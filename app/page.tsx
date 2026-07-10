@@ -1,41 +1,40 @@
+"use client";
+
 import type { CSSProperties } from "react";
+import { useEffect, useMemo, useState } from "react";
 import CollectionCatalog from "./CollectionCatalog";
 import MobileNav from "./MobileNav";
 import ScrollReveal from "./ScrollReveal";
 import { collection } from "../data/collection";
+import type { Language } from "../data/translations";
+import { languages, translations } from "../data/translations";
 
-const navLinks = [
-  { label: "О коллекции", href: "#about" },
-  { label: "Монеты", href: "#coins" },
-  { label: "Банкноты", href: "#banknotes" },
-  { label: "Блистеры", href: "#blisters" },
-  { label: "Интересные факты", href: "#facts" },
-  { label: "Контакты", href: "#contacts" },
-];
+const navKeys = [
+  ["about", "#about"],
+  ["coins", "#coins"],
+  ["banknotes", "#banknotes"],
+  ["blisters", "#blisters"],
+  ["facts", "#facts"],
+  ["contacts", "#contacts"],
+] as const;
 
-const collectionSections = [
+const collectionSectionKeys = [
   {
-    title: "Банкноты",
+    titleKey: "banknotesTitle",
+    descriptionKey: "banknotesDescription",
     href: "#banknotes",
-    description: "Бумажные деньги, страны, серии и детали дизайна.",
   },
   {
-    title: "Монеты",
+    titleKey: "coinsTitle",
+    descriptionKey: "coinsDescription",
     href: "#coins",
-    description: "Металлические экземпляры, номиналы, годы выпуска и страны.",
   },
   {
-    title: "Блистеры",
+    titleKey: "blistersTitle",
+    descriptionKey: "blistersDescription",
     href: "#blisters",
-    description: "Тематические выпуски и коллекционные наборы.",
   },
-];
-
-const stories = [
-  "Самые маленькие номиналы часто рассказывают о повседневной жизни страны лучше редких юбилейных выпусков.",
-  "На банкнотах можно встретить скрытые элементы: микротекст, водяные знаки и орнаменты, видимые только под углом.",
-  "Монеты из путешествий сохраняют не только стоимость, но и момент: город, маршрут, разговор или случайную находку.",
-];
+] as const;
 
 const contacts = [
   {
@@ -55,25 +54,6 @@ const contacts = [
     value: "mr.designer.gd@gmail.com",
     href: "mailto:mr.designer.gd@gmail.com",
     icon: "email",
-  },
-];
-
-const stats = [
-  {
-    value: collection.filter((item) => item.category === "coin").length,
-    label: "Монет",
-  },
-  {
-    value: collection.filter((item) => item.category === "banknote").length,
-    label: "Банкнот",
-  },
-  {
-    value: collection.filter((item) => item.category === "blister").length,
-    label: "Блистеров",
-  },
-  {
-    value: new Set(collection.map((item) => item.country).filter(Boolean)).size,
-    label: "Стран",
   },
 ];
 
@@ -105,7 +85,77 @@ function ContactIcon({ type }: { type: string }) {
   );
 }
 
+function LanguageSwitcher({
+  language,
+  onChange,
+}: {
+  language: Language;
+  onChange: (language: Language) => void;
+}) {
+  return (
+    <div className="flex shrink-0 rounded-full border border-[#d8b45f]/20 bg-[#173d2d]/72 p-1">
+      {languages.map((item) => (
+        <button
+          key={item.code}
+          type="button"
+          onClick={() => onChange(item.code)}
+          className={`rounded-full px-3 py-1.5 text-xs font-black transition ${
+            language === item.code
+              ? "bg-[#d8b45f] text-[#101311]"
+              : "text-[#efe8d0]/75 hover:bg-[#efe8d0]/10 hover:text-[#f2cf7d]"
+          }`}
+          aria-pressed={language === item.code}
+        >
+          {item.label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 export default function Home() {
+  const [language, setLanguage] = useState<Language>("ru");
+
+  useEffect(() => {
+    const stored = window.localStorage.getItem("wmc-language");
+    if (stored === "ru" || stored === "kz" || stored === "en") {
+      setLanguage(stored);
+    }
+  }, []);
+
+  const changeLanguage = (nextLanguage: Language) => {
+    setLanguage(nextLanguage);
+    window.localStorage.setItem("wmc-language", nextLanguage);
+  };
+
+  const navLinks = useMemo(
+    () =>
+      navKeys.map(([key, href]) => ({
+        label: translations.nav[key][language],
+        href,
+      })),
+    [language],
+  );
+
+  const stats = [
+    {
+      value: collection.filter((item) => item.category === "coin").length,
+      label: translations.stats.coins[language],
+    },
+    {
+      value: collection.filter((item) => item.category === "banknote").length,
+      label: translations.stats.banknotes[language],
+    },
+    {
+      value: collection.filter((item) => item.category === "blister").length,
+      label: translations.stats.blisters[language],
+    },
+    {
+      value: new Set(collection.map((item) => item.country).filter(Boolean)).size,
+      label: translations.stats.countries[language],
+    },
+  ];
+
   return (
     <main className="min-h-screen overflow-hidden bg-[#101311] text-[#f8f5ea]">
       <ScrollReveal />
@@ -132,29 +182,31 @@ export default function Home() {
               </a>
             ))}
           </div>
-          <MobileNav items={navLinks} />
+          <div className="flex items-center gap-2">
+            <LanguageSwitcher language={language} onChange={changeLanguage} />
+            <MobileNav items={navLinks} menuLabel={translations.nav.menu[language]} />
+          </div>
         </nav>
       </header>
 
       <section className="relative z-10 mx-auto grid max-w-7xl items-center gap-8 px-5 py-10 sm:py-16 lg:min-h-[calc(100vh-73px)] lg:grid-cols-[1.08fr_0.92fr] lg:gap-12 lg:px-8">
         <div>
           <p data-hero-reveal style={{ "--hero-delay": "40ms" } as CSSProperties} className="mb-5 inline-flex rounded-full border border-[#d8b45f]/35 bg-[#173d2d]/80 px-4 py-2 text-sm font-medium leading-5 text-[#f2cf7d]">
-            Личный онлайн-музей монет и купюр
+            {translations.hero.badge[language]}
           </p>
           <h1 data-hero-reveal style={{ "--hero-delay": "120ms" } as CSSProperties} className="max-w-4xl text-4xl font-black leading-[1.06] text-white sm:text-5xl md:text-6xl lg:text-7xl">
-            Деньги мира как маленькие артефакты истории
+            {translations.hero.title[language]}
           </h1>
           <p data-hero-reveal style={{ "--hero-delay": "220ms" } as CSSProperties} className="mt-5 max-w-2xl text-base leading-7 text-[#efe8d0]/78 sm:mt-6 sm:text-lg sm:leading-8">
-            World Money Collection — это мой личный цифровой архив монет и купюр
-            из разных стран. Здесь каждая находка хранит свою историю: страну,
-            время, символы и детали, которые делают деньги частью культуры.
+            {translations.hero.lead[language]}{" "}
+            {translations.hero.description[language]}
           </p>
           <div data-hero-reveal style={{ "--hero-delay": "330ms" } as CSSProperties} className="mt-8 flex flex-col gap-3 sm:mt-9 sm:flex-row sm:gap-4">
             <a
               href="#collection"
               className="w-full rounded-full bg-[#d8b45f] px-5 py-4 text-center font-bold text-[#101311] shadow-[0_16px_45px_rgba(216,180,95,0.24)] transition hover:-translate-y-1 hover:bg-[#f2cf7d] sm:w-auto sm:px-7"
             >
-              Смотреть коллекцию
+              {translations.hero.cta[language]}
             </a>
           </div>
         </div>
@@ -178,9 +230,11 @@ export default function Home() {
             <div className="flex items-start justify-between">
               <div>
                 <p className="text-[0.68rem] font-bold uppercase tracking-[0.2em] text-[#173d2d]/55 sm:text-xs sm:tracking-[0.28em]">
-                  Banknote
+                  {translations.visual.banknote[language]}
                 </p>
-                <p className="mt-1 text-xl font-black sm:mt-2 sm:text-2xl">Collection</p>
+                <p className="mt-1 text-xl font-black sm:mt-2 sm:text-2xl">
+                  {translations.visual.collection[language]}
+                </p>
               </div>
               <span className="rounded-full bg-[#d8b45f] px-2.5 py-1 text-xs font-bold sm:px-3 sm:text-sm">
                 2026
@@ -188,13 +242,13 @@ export default function Home() {
             </div>
             <div className="mt-6 h-12 rounded-xl bg-[repeating-linear-gradient(135deg,#173d2d_0_8px,#1f573f_8px_16px)] opacity-90 sm:mt-10 sm:h-16" />
             <p className="mt-4 text-xs leading-5 text-[#173d2d]/70 sm:mt-5 sm:text-sm sm:leading-6">
-              Место для будущей банкноты, страны, года выпуска и заметки о находке.
+              {translations.visual.note[language]}
             </p>
           </div>
 
           <div className="relative z-20 order-2 w-32 justify-self-end rounded-xl border border-[#d8b45f]/30 bg-[#101311]/88 p-3 shadow-[0_20px_55px_rgba(0,0,0,0.32)] backdrop-blur transition hover:-translate-y-1 sm:w-40 sm:p-4">
             <p className="text-[0.68rem] font-bold uppercase tracking-[0.18em] text-[#f2cf7d] sm:text-xs sm:tracking-[0.22em]">
-              Country
+              {translations.visual.country[language]}
             </p>
             <p className="mt-1 text-lg font-black text-white sm:mt-2 sm:text-xl">France</p>
             <p className="mt-1 text-xs text-[#efe8d0]/62">Europe series</p>
@@ -202,21 +256,21 @@ export default function Home() {
 
           <div className="relative z-20 order-4 w-28 justify-self-start rounded-xl border border-[#efe8d0]/18 bg-[#173d2d]/92 p-3 shadow-[0_18px_48px_rgba(0,0,0,0.34)] backdrop-blur transition hover:-translate-y-1 sm:w-36 sm:p-4">
             <p className="text-[0.68rem] font-bold uppercase tracking-[0.18em] text-[#f2cf7d] sm:text-xs sm:tracking-[0.22em]">
-              Year
+              {translations.visual.year[language]}
             </p>
             <p className="mt-1 text-xl font-black text-white sm:mt-2 sm:text-2xl">2002</p>
           </div>
 
           <div className="relative z-20 order-5 w-36 justify-self-end rounded-xl border border-[#d8b45f]/35 bg-[#efe8d0] p-3 text-[#173d2d] shadow-[0_20px_50px_rgba(0,0,0,0.34)] transition hover:-translate-y-1 sm:w-44 sm:p-4">
             <p className="text-[0.68rem] font-bold uppercase tracking-[0.18em] text-[#173d2d]/60 sm:text-xs sm:tracking-[0.22em]">
-              Nominal
+              {translations.visual.nominal[language]}
             </p>
             <p className="mt-1 text-xl font-black sm:mt-2 sm:text-2xl">2 Euro</p>
           </div>
 
           <div className="absolute left-1/2 top-6 hidden w-40 -translate-x-1/2 rounded-xl border border-[#d8b45f]/20 bg-[#efe8d0]/10 p-3 text-center backdrop-blur md:block">
             <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#f2cf7d]">
-              Curated item
+              {translations.visual.curated[language]}
             </p>
           </div>
         </div>
@@ -226,17 +280,14 @@ export default function Home() {
         <div data-reveal className="mx-auto grid max-w-7xl gap-8 px-5 py-14 sm:py-20 lg:grid-cols-[0.8fr_1.2fr] lg:gap-10 lg:px-8">
           <div>
             <p className="text-sm font-bold uppercase tracking-[0.28em] text-[#f2cf7d]">
-              О коллекции
+              {translations.about.eyebrow[language]}
             </p>
             <h2 className="mt-4 text-3xl font-black text-white sm:text-4xl">
-              Архив путешествий, стран и деталей
+              {translations.about.title[language]}
             </h2>
           </div>
           <p className="text-base leading-7 text-[#efe8d0]/82 sm:text-lg sm:leading-8">
-            Коллекция объединяет монеты, банкноты и блистеры, которые хочется
-            рассматривать как предметы культуры: металл, бумагу, портреты,
-            гербы, защитные узоры и следы времени. Этот сайт станет витриной
-            для любимых экземпляров и аккуратным каталогом будущих пополнений.
+            {translations.about.description[language]}
           </p>
         </div>
       </section>
@@ -263,14 +314,14 @@ export default function Home() {
         <div className="mx-auto max-w-7xl px-5 py-14 sm:py-20 lg:px-8">
           <div data-reveal className="mb-8">
             <p className="text-sm font-bold uppercase tracking-[0.28em] text-[#f2cf7d]">
-              Коллекция
+              {translations.collection.eyebrow[language]}
             </p>
             <h2 className="mt-4 text-3xl font-black text-white sm:text-4xl">
-              Выберите раздел коллекции
+              {translations.collection.title[language]}
             </h2>
           </div>
           <div className="grid gap-5 md:grid-cols-3">
-            {collectionSections.map((item, index) => (
+            {collectionSectionKeys.map((item, index) => (
               <a
                 key={item.href}
                 href={item.href}
@@ -281,29 +332,33 @@ export default function Home() {
                 <span className="grid size-14 place-items-center rounded-full border border-[#d8b45f]/45 bg-[#173d2d] text-xl font-black text-[#f2cf7d] transition group-hover:scale-105">
                   {index + 1}
                 </span>
-                <h3 className="mt-8 text-2xl font-black text-white">{item.title}</h3>
-                <p className="mt-4 leading-7 text-[#efe8d0]/72">{item.description}</p>
+                <h3 className="mt-8 text-2xl font-black text-white">
+                  {translations.collection[item.titleKey][language]}
+                </h3>
+                <p className="mt-4 leading-7 text-[#efe8d0]/72">
+                  {translations.collection[item.descriptionKey][language]}
+                </p>
               </a>
             ))}
           </div>
         </div>
       </section>
 
-      <CollectionCatalog items={collection} />
+      <CollectionCatalog items={collection} language={language} />
 
       <section id="facts" className="relative z-10 mx-auto max-w-7xl px-5 py-12 sm:py-16 lg:px-8">
         <div data-reveal>
           <p className="text-sm font-bold uppercase tracking-[0.28em] text-[#f2cf7d]">
-            Интересные факты
+            {translations.facts.eyebrow[language]}
           </p>
           <h2 className="mt-4 text-3xl font-black text-white sm:text-4xl">
-            Интересные истории о деньгах
+            {translations.facts.title[language]}
           </h2>
         </div>
         <div className="mt-8 grid gap-5 md:grid-cols-3 lg:mt-10">
-          {stories.map((story, index) => (
+          {translations.facts.cards.map((story, index) => (
             <article
-              key={story}
+              key={index}
               data-reveal
               data-reveal-delay={index * 110}
               className="rounded-lg border border-[#d8b45f]/15 bg-[#173d2d]/72 p-5 transition hover:-translate-y-1 hover:border-[#d8b45f]/55 sm:p-6"
@@ -312,7 +367,7 @@ export default function Home() {
                 0{index + 1}
               </span>
               <p className="mt-5 text-base leading-7 text-[#efe8d0]/82 sm:text-lg sm:leading-8">
-                {story}
+                {story[language]}
               </p>
             </article>
           ))}
@@ -323,10 +378,10 @@ export default function Home() {
         <div className="mx-auto max-w-7xl px-5 py-14 sm:py-20 lg:px-8">
           <div data-reveal className="mb-8 text-center">
             <p className="text-sm font-bold uppercase tracking-[0.28em] text-[#f2cf7d]">
-              Контакты
+              {translations.contacts.title[language]}
             </p>
             <h2 className="mt-4 text-3xl font-black text-white sm:text-4xl">
-              Связаться с коллекционером
+              {translations.contacts.description[language]}
             </h2>
           </div>
           <div className="grid gap-5 md:grid-cols-3">

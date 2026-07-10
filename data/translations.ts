@@ -131,10 +131,20 @@ export const translations = {
     },
   },
   stats: {
-    coins: { ru: "Монет", kz: "Монеталар", en: "Coins" },
-    banknotes: { ru: "Банкнот", kz: "Банкноттар", en: "Banknotes" },
-    blisters: { ru: "Блистеров", kz: "Блистерлер", en: "Blisters" },
-    countries: { ru: "Стран", kz: "Елдер", en: "Countries" },
+    coins: { ru: "монет", kz: "монета", en: "coins" },
+    banknotes: { ru: "банкнот", kz: "банкнот", en: "banknotes" },
+    blisters: { ru: "блистеров", kz: "блистер", en: "blisters" },
+    countries: { ru: "стран", kz: "ел", en: "countries" },
+    specialTerritories: {
+      ru: "особые территории",
+      kz: "ерекше аумақ",
+      en: "special territories",
+    },
+    historicalStates: {
+      ru: "исторических государств",
+      kz: "тарихи мемлекет",
+      en: "historical states",
+    },
   },
   collection: {
     eyebrow: { ru: "Коллекция", kz: "Коллекция", en: "Collection" },

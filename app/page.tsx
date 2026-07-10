@@ -57,6 +57,44 @@ const contacts = [
   },
 ];
 
+function getMoneyStats(category: "coin" | "banknote") {
+  const categoryItems = collection.filter((item) => item.category === category);
+
+  const countryKeys = new Set(
+    categoryItems
+      .filter((item) => (item.collectionGroup ?? "regular") === "regular")
+      .flatMap((item) => {
+        const keys =
+          item.countryKey && item.countryKey !== "europeanUnion" ? [item.countryKey] : [];
+        const relatedKeys = item.relatedCountries?.map((country) => country.countryKey) ?? [];
+        return [...keys, ...relatedKeys];
+      }),
+  );
+
+  const specialTerritoryKeys = new Set(
+    categoryItems
+      .filter((item) => item.collectionGroup === "specialTerritories")
+      .flatMap((item) => {
+        const keys = item.countryKey ? [item.countryKey] : [];
+        const relatedKeys = item.relatedCountries?.map((country) => country.countryKey) ?? [];
+        return [...keys, ...relatedKeys];
+      }),
+  );
+
+  const historicalStateKeys = new Set(
+    categoryItems
+      .filter((item) => item.collectionGroup === "historicalStates" && item.historicalEntityKey)
+      .map((item) => item.historicalEntityKey),
+  );
+
+  return {
+    count: categoryItems.length,
+    countries: countryKeys.size,
+    specialTerritories: specialTerritoryKeys.size,
+    historicalStates: historicalStateKeys.size,
+  };
+}
+
 function ContactIcon({ type }: { type: string }) {
   if (type === "instagram") {
     return (
@@ -137,22 +175,34 @@ export default function Home() {
     [language],
   );
 
+  const coinStats = getMoneyStats("coin");
+  const banknoteStats = getMoneyStats("banknote");
+  const blisterCount = collection.filter((item) => item.category === "blister").length;
+
   const stats = [
     {
-      value: collection.filter((item) => item.category === "coin").length,
+      value: coinStats.count,
       label: translations.stats.coins[language],
     },
     {
-      value: collection.filter((item) => item.category === "banknote").length,
+      value: banknoteStats.count,
       label: translations.stats.banknotes[language],
     },
     {
-      value: collection.filter((item) => item.category === "blister").length,
+      value: blisterCount,
       label: translations.stats.blisters[language],
     },
     {
-      value: new Set(collection.map((item) => item.countryKey).filter(Boolean)).size,
+      value: coinStats.countries,
       label: translations.stats.countries[language],
+    },
+    {
+      value: coinStats.specialTerritories,
+      label: translations.stats.specialTerritories[language],
+    },
+    {
+      value: coinStats.historicalStates,
+      label: translations.stats.historicalStates[language],
     },
   ];
 
@@ -297,7 +347,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="relative z-10 mx-auto grid max-w-7xl grid-cols-2 gap-3 px-5 py-12 sm:gap-4 sm:py-16 lg:grid-cols-4 lg:px-8">
+      <section className="relative z-10 mx-auto grid max-w-7xl grid-cols-2 gap-3 px-5 py-12 sm:grid-cols-3 sm:gap-4 sm:py-16 xl:grid-cols-6 lg:px-8">
         {stats.map((item, index) => (
           <div
             key={item.label}

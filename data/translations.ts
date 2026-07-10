@@ -1,4 +1,4 @@
-import type { BlisterTheme, CollectionCategory, Continent } from "./collection";
+import type { BlisterTheme, CollectionCategory, CollectionGroup, Continent } from "./collection";
 
 export type Language = "ru" | "kz" | "en";
 
@@ -200,6 +200,46 @@ export const translations = {
       kz: "Коллекция бойынша іздеу",
       en: "Search the collection",
     },
+    categorySearchPlaceholder: {
+      ru: "Найти континент или категорию",
+      kz: "Континентті немесе санатты табу",
+      en: "Find a continent or category",
+    },
+    themeSearchPlaceholder: {
+      ru: "Найти тему",
+      kz: "Тақырыпты табу",
+      en: "Find a theme",
+    },
+    searchResults: {
+      ru: "Результаты поиска",
+      kz: "Іздеу нәтижелері",
+      en: "Search results",
+    },
+    coinsNotFound: {
+      ru: "Монеты не найдены",
+      kz: "Монеталар табылмады",
+      en: "No coins found",
+    },
+    banknotesNotFound: {
+      ru: "Банкноты не найдены",
+      kz: "Банкноттар табылмады",
+      en: "No banknotes found",
+    },
+    blistersNotFound: {
+      ru: "Блистеры не найдены",
+      kz: "Блистерлер табылмады",
+      en: "No blisters found",
+    },
+    categoriesNotFound: {
+      ru: "Категории не найдены",
+      kz: "Санаттар табылмады",
+      en: "No categories found",
+    },
+    themesNotFound: {
+      ru: "Темы не найдены",
+      kz: "Тақырыптар табылмады",
+      en: "No themes found",
+    },
     sort: { ru: "Сортировка", kz: "Сұрыптау", en: "Sort" },
     alpha: { ru: "По алфавиту", kz: "Әліпби бойынша", en: "Alphabetically" },
     alphaCountry: {
@@ -228,13 +268,62 @@ export const translations = {
       kz: "data/collection.ts ішінде осы санаттағы жәдігерлер пайда болғанда, олар осында автоматты түрде көрсетіледі.",
       en: "When items in this category are added to data/collection.ts, they will appear here automatically.",
     },
+    banknotesSoon: {
+      ru: "Банкноты скоро появятся",
+      kz: "Банкноттар жақында қосылады",
+      en: "Banknotes coming soon",
+    },
     back: {
       ru: "Вернуться к выбору коллекции",
       kz: "Коллекция таңдауға оралу",
       en: "Back to Collection Selection",
     },
+    backToCollection: {
+      ru: "Назад к коллекции",
+      kz: "Коллекцияға қайту",
+      en: "Back to collection",
+    },
+    backToCategories: {
+      ru: "Назад к категориям",
+      kz: "Санаттарға қайту",
+      en: "Back to categories",
+    },
+    backToCoinList: {
+      ru: "Назад к списку монет",
+      kz: "Монеталар тізіміне қайту",
+      en: "Back to coin list",
+    },
+    backToBanknoteList: {
+      ru: "Назад к списку банкнот",
+      kz: "Банкноттар тізіміне қайту",
+      en: "Back to banknote list",
+    },
+    collectionRoot: { ru: "Коллекция", kz: "Коллекция", en: "Collection" },
     photoSoon: { ru: "Фото скоро", kz: "Фото жақында", en: "Photo soon" },
+    photoComingSoon: {
+      ru: "Фото скоро",
+      kz: "Фото жақында",
+      en: "Photo coming soon",
+    },
+    itemDetails: {
+      ru: "Детали экземпляра",
+      kz: "Экземпляр туралы мәлімет",
+      en: "Item details",
+    },
+    backToCatalog: {
+      ru: "Вернуться к каталогу",
+      kz: "Каталогқа оралу",
+      en: "Back to catalog",
+    },
+    obverse: { ru: "Аверс", kz: "Аверс", en: "Obverse" },
+    reverse: { ru: "Реверс", kz: "Реверс", en: "Reverse" },
     country: { ru: "Страна", kz: "Ел", en: "Country" },
+    countries: { ru: "Страны", kz: "Елдер", en: "Countries" },
+    historicalState: {
+      ru: "Историческое государство",
+      kz: "Тарихи мемлекет",
+      en: "Historical state",
+    },
     nominal: { ru: "Номинал", kz: "Номинал", en: "Nominal" },
     year: { ru: "Год", kz: "Жыл", en: "Year" },
   },
@@ -244,20 +333,65 @@ export const translations = {
     blister: { ru: "Блистер", kz: "Блистер", en: "Blister" },
   } satisfies Record<CollectionCategory, LocalizedText>,
   continent: {
-    Европа: { ru: "Европа", kz: "Еуропа", en: "Europe" },
-    Азия: { ru: "Азия", kz: "Азия", en: "Asia" },
-    Африка: { ru: "Африка", kz: "Африка", en: "Africa" },
-    "Северная Америка": {
+    europe: { ru: "Европа", kz: "Еуропа", en: "Europe" },
+    asia: { ru: "Азия", kz: "Азия", en: "Asia" },
+    africa: { ru: "Африка", kz: "Африка", en: "Africa" },
+    northAmerica: {
       ru: "Северная Америка",
       kz: "Солтүстік Америка",
       en: "North America",
     },
-    "Южная Америка": {
+    southAmerica: {
       ru: "Южная Америка",
       kz: "Оңтүстік Америка",
       en: "South America",
     },
-    Океания: { ru: "Океания", kz: "Океания", en: "Oceania" },
+    oceania: { ru: "Океания", kz: "Океания", en: "Oceania" },
+  } satisfies Record<Continent, LocalizedText>,
+  collectionGroup: {
+    regular: { ru: "Обычная коллекция", kz: "Негізгі коллекция", en: "Regular Collection" },
+    specialTerritories: {
+      ru: "Зависимые и особые территории",
+      kz: "Тәуелді және ерекше аумақтар",
+      en: "Dependent and Special Territories",
+    },
+    historicalStates: {
+      ru: "Исторические государства",
+      kz: "Тарихи мемлекеттер",
+      en: "Historical States",
+    },
+  } satisfies Record<CollectionGroup, LocalizedText>,
+  coinCatalogTitle: {
+    europe: { ru: "Монеты Европы", kz: "Еуропа монеталары", en: "Coins of Europe" },
+    asia: { ru: "Монеты Азии", kz: "Азия монеталары", en: "Coins of Asia" },
+    africa: { ru: "Монеты Африки", kz: "Африка монеталары", en: "Coins of Africa" },
+    northAmerica: {
+      ru: "Монеты Северной Америки",
+      kz: "Солтүстік Америка монеталары",
+      en: "Coins of North America",
+    },
+    southAmerica: {
+      ru: "Монеты Южной Америки",
+      kz: "Оңтүстік Америка монеталары",
+      en: "Coins of South America",
+    },
+    oceania: { ru: "Монеты Океании", kz: "Океания монеталары", en: "Coins of Oceania" },
+  } satisfies Record<Continent, LocalizedText>,
+  banknoteCatalogTitle: {
+    europe: { ru: "Банкноты Европы", kz: "Еуропа банкноттары", en: "Banknotes of Europe" },
+    asia: { ru: "Банкноты Азии", kz: "Азия банкноттары", en: "Banknotes of Asia" },
+    africa: { ru: "Банкноты Африки", kz: "Африка банкноттары", en: "Banknotes of Africa" },
+    northAmerica: {
+      ru: "Банкноты Северной Америки",
+      kz: "Солтүстік Америка банкноттары",
+      en: "Banknotes of North America",
+    },
+    southAmerica: {
+      ru: "Банкноты Южной Америки",
+      kz: "Оңтүстік Америка банкноттары",
+      en: "Banknotes of South America",
+    },
+    oceania: { ru: "Банкноты Океании", kz: "Океания банкноттары", en: "Banknotes of Oceania" },
   } satisfies Record<Continent, LocalizedText>,
   blisterTheme: {
     "Известные личности": {

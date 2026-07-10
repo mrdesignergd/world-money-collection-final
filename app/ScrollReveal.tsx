@@ -5,21 +5,7 @@ import { useEffect } from "react";
 export default function ScrollReveal() {
   useEffect(() => {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const elements = Array.from(
-      document.querySelectorAll<HTMLElement>("[data-reveal]"),
-    );
-
-    if (reduceMotion.matches) {
-      elements.forEach((element) => element.classList.add("is-visible"));
-      return;
-    }
-
-    elements.forEach((element) => {
-      const delay = element.dataset.revealDelay;
-      if (delay) {
-        element.style.setProperty("--reveal-delay", `${delay}ms`);
-      }
-    });
+    const observedElements = new WeakSet<HTMLElement>();
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -36,9 +22,55 @@ export default function ScrollReveal() {
       },
     );
 
-    elements.forEach((element) => observer.observe(element));
+    const revealElement = (element: HTMLElement) => {
+      if (observedElements.has(element)) return;
 
-    return () => observer.disconnect();
+      observedElements.add(element);
+
+      const delay = element.dataset.revealDelay;
+      if (delay) {
+        element.style.setProperty("--reveal-delay", `${delay}ms`);
+      }
+
+      if (reduceMotion.matches) {
+        element.classList.add("is-visible");
+        return;
+      }
+
+      observer.observe(element);
+    };
+
+    const revealElements = (root: ParentNode) => {
+      root
+        .querySelectorAll<HTMLElement>("[data-reveal]")
+        .forEach((element) => revealElement(element));
+    };
+
+    revealElements(document);
+
+    const mutationObserver = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        mutation.addedNodes.forEach((node) => {
+          if (!(node instanceof HTMLElement)) return;
+
+          if (node.matches("[data-reveal]")) {
+            revealElement(node);
+          }
+
+          revealElements(node);
+        });
+      });
+    });
+
+    mutationObserver.observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
+
+    return () => {
+      observer.disconnect();
+      mutationObserver.disconnect();
+    };
   }, []);
 
   return null;

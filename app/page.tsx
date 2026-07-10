@@ -151,7 +151,7 @@ export default function Home() {
       label: translations.stats.blisters[language],
     },
     {
-      value: new Set(collection.map((item) => item.country).filter(Boolean)).size,
+      value: new Set(collection.map((item) => item.countryKey).filter(Boolean)).size,
       label: translations.stats.countries[language],
     },
   ];

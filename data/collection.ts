@@ -19,92 +19,7 @@ export type BlisterTheme =
   | "Знаменитые события"
   | "Прочие";
 
-export type CountryKey =
-  | "azerbaijan"
-  | "armenia"
-  | "georgia"
-  | "israel"
-  | "india"
-  | "indonesia"
-  | "jordan"
-  | "qatar"
-  | "china"
-  | "kyrgyzstan"
-  | "malaysia"
-  | "mongolia"
-  | "unitedArabEmirates"
-  | "saudiArabia"
-  | "singapore"
-  | "syria"
-  | "thailand"
-  | "turkey"
-  | "uzbekistan"
-  | "hongKong"
-  | "kazakhstan"
-  | "southKorea"
-  | "japan"
-  | "austria"
-  | "belarus"
-  | "belgium"
-  | "bulgaria"
-  | "unitedKingdom"
-  | "hungary"
-  | "germany"
-  | "greece"
-  | "denmark"
-  | "europeanUnion"
-  | "iceland"
-  | "spain"
-  | "italy"
-  | "ireland"
-  | "lithuania"
-  | "luxembourg"
-  | "malta"
-  | "netherlands"
-  | "norway"
-  | "poland"
-  | "portugal"
-  | "russia"
-  | "slovakia"
-  | "ukraine"
-  | "finland"
-  | "france"
-  | "czechia"
-  | "switzerland"
-  | "sweden"
-  | "estonia"
-  | "isleOfMan"
-  | "transnistria"
-  | "anguilla"
-  | "montserrat"
-  | "canada"
-  | "honduras"
-  | "dominicanRepublic"
-  | "mexico"
-  | "unitedStates"
-  | "eastCaribbeanStates"
-  | "antiguaAndBarbuda"
-  | "dominica"
-  | "grenada"
-  | "saintKittsAndNevis"
-  | "saintLucia"
-  | "saintVincentAndTheGrenadines"
-  | "argentina"
-  | "brazil"
-  | "venezuela"
-  | "paraguay"
-  | "uruguay"
-  | "ecuador"
-  | "egypt"
-  | "malawi"
-  | "rwanda"
-  | "tanzania"
-  | "southAfrica"
-  | "australia"
-  | "newZealand"
-  | "papuaNewGuinea"
-  | "solomonIslands"
-  | "fiji";
+export type CountryKey = string;
 
 export type HistoricalEntityKey =
   | "weimarRepublic"
@@ -269,6 +184,89 @@ export const countries: Record<CountryKey, CountryInfo> = {
   newZealand: { code: "NZ", ru: "Новая Зеландия", kz: "Жаңа Зеландия", en: "New Zealand" },
   papuaNewGuinea: { code: "PG", ru: "Папуа — Новая Гвинея", kz: "Папуа — Жаңа Гвинея", en: "Papua New Guinea" },
   solomonIslands: { code: "SB", ru: "Соломоновы острова", kz: "Соломон аралдары", en: "Solomon Islands" },
+  bosniaAndHerzegovina: { code: "BA", ru: "Босния и Герцеговина", kz: "Босния және Герцеговина", en: "Bosnia and Herzegovina" },
+  moldova: { code: "MD", ru: "Молдова", kz: "Молдова", en: "Moldova" },
+  romania: { code: "RO", ru: "Румыния", kz: "Румыния", en: "Romania" },
+  northMacedonia: { code: "MK", ru: "Северная Македония", kz: "Солтүстік Македония", en: "North Macedonia" },
+  serbia: { code: "RS", ru: "Сербия", kz: "Сербия", en: "Serbia" },
+  croatia: { code: "HR", ru: "Хорватия", kz: "Хорватия", en: "Croatia" },
+  afghanistan: { code: "AF", ru: "Афганистан", kz: "Ауғанстан", en: "Afghanistan" },
+  bangladesh: { code: "BD", ru: "Бангладеш", kz: "Бангладеш", en: "Bangladesh" },
+  brunei: { code: "BN", ru: "Бруней", kz: "Бруней", en: "Brunei" },
+  bhutan: { code: "BT", ru: "Бутан", kz: "Бутан", en: "Bhutan" },
+  vietnam: { code: "VN", ru: "Вьетнам", kz: "Вьетнам", en: "Vietnam" },
+  iraq: { code: "IQ", ru: "Ирак", kz: "Ирак", en: "Iraq" },
+  iran: { code: "IR", ru: "Иран", kz: "Иран", en: "Iran" },
+  yemen: { code: "YE", ru: "Йемен", kz: "Йемен", en: "Yemen" },
+  cambodia: { code: "KH", ru: "Камбоджа", kz: "Камбоджа", en: "Cambodia" },
+  northKorea: { code: "KP", ru: "КНДР", kz: "КХДР", en: "North Korea" },
+  laos: { code: "LA", ru: "Лаос", kz: "Лаос", en: "Laos" },
+  lebanon: { code: "LB", ru: "Ливан", kz: "Ливан", en: "Lebanon" },
+  maldives: { code: "MV", ru: "Мальдивы", kz: "Мальдивтер", en: "Maldives" },
+  myanmar: { code: "MM", ru: "Мьянма", kz: "Мьянма", en: "Myanmar" },
+  nepal: { code: "NP", ru: "Непал", kz: "Непал", en: "Nepal" },
+  oman: { code: "OM", ru: "Оман", kz: "Оман", en: "Oman" },
+  pakistan: { code: "PK", ru: "Пакистан", kz: "Пәкістан", en: "Pakistan" },
+  philippines: { code: "PH", ru: "Филиппины", kz: "Филиппин", en: "Philippines" },
+  sriLanka: { code: "LK", ru: "Шри-Ланка", kz: "Шри-Ланка", en: "Sri Lanka" },
+  eastTimor: { code: "TL", ru: "Восточный Тимор", kz: "Шығыс Тимор", en: "East Timor" },
+  bahamas: { code: "BS", ru: "Багамы", kz: "Багам аралдары", en: "Bahamas" },
+  barbados: { code: "BB", ru: "Барбадос", kz: "Барбадос", en: "Barbados" },
+  haiti: { code: "HT", ru: "Гаити", kz: "Гаити", en: "Haiti" },
+  guatemala: { code: "GT", ru: "Гватемала", kz: "Гватемала", en: "Guatemala" },
+  cuba: { code: "CU", ru: "Куба", kz: "Куба", en: "Cuba" },
+  nicaragua: { code: "NI", ru: "Никарагуа", kz: "Никарагуа", en: "Nicaragua" },
+  trinidadAndTobago: { code: "TT", ru: "Тринидад и Тобаго", kz: "Тринидад және Тобаго", en: "Trinidad and Tobago" },
+  jamaica: { code: "JM", ru: "Ямайка", kz: "Ямайка", en: "Jamaica" },
+  elSalvador: { code: "SV", ru: "Сальвадор", kz: "Сальвадор", en: "El Salvador" },
+  bolivia: { code: "BO", ru: "Боливия", kz: "Боливия", en: "Bolivia" },
+  guyana: { code: "GY", ru: "Гайана", kz: "Гайана", en: "Guyana" },
+  colombia: { code: "CO", ru: "Колумбия", kz: "Колумбия", en: "Colombia" },
+  peru: { code: "PE", ru: "Перу", kz: "Перу", en: "Peru" },
+  suriname: { code: "SR", ru: "Суринам", kz: "Суринам", en: "Suriname" },
+  angola: { code: "AO", ru: "Ангола", kz: "Ангола", en: "Angola" },
+  burundi: { code: "BI", ru: "Бурунди", kz: "Бурунди", en: "Burundi" },
+  gambia: { code: "GM", ru: "Гамбия", kz: "Гамбия", en: "Gambia" },
+  ghana: { code: "GH", ru: "Гана", kz: "Гана", en: "Ghana" },
+  guinea: { code: "GN", ru: "Гвинея", kz: "Гвинея", en: "Guinea" },
+  guineaBissau: { code: "GW", ru: "Гвинея-Бисау", kz: "Гвинея-Бисау", en: "Guinea-Bissau" },
+  djibouti: { code: "DJ", ru: "Джибути", kz: "Джибути", en: "Djibouti" },
+  zambia: { code: "ZM", ru: "Замбия", kz: "Замбия", en: "Zambia" },
+  zimbabwe: { code: "ZW", ru: "Зимбабве", kz: "Зимбабве", en: "Zimbabwe" },
+  kenya: { code: "KE", ru: "Кения", kz: "Кения", en: "Kenya" },
+  congo: { code: "CG", ru: "Конго", kz: "Конго", en: "Congo" },
+  lesotho: { code: "LS", ru: "Лесото", kz: "Лесото", en: "Lesotho" },
+  liberia: { code: "LR", ru: "Либерия", kz: "Либерия", en: "Liberia" },
+  libya: { code: "LY", ru: "Ливия", kz: "Ливия", en: "Libya" },
+  mauritius: { code: "MU", ru: "Маврикий", kz: "Маврикий", en: "Mauritius" },
+  mauritania: { code: "MR", ru: "Мавритания", kz: "Мавритания", en: "Mauritania" },
+  madagascar: { code: "MG", ru: "Мадагаскар", kz: "Мадагаскар", en: "Madagascar" },
+  mozambique: { code: "MZ", ru: "Мозамбик", kz: "Мозамбик", en: "Mozambique" },
+  nigeria: { code: "NG", ru: "Нигерия", kz: "Нигерия", en: "Nigeria" },
+  saoTomeAndPrincipe: { code: "ST", ru: "Сан-Томе и Принсипи", kz: "Сан-Томе және Принсипи", en: "Sao Tome and Principe" },
+  eswatini: { code: "SZ", ru: "Свазиленд", kz: "Эсватини", en: "Eswatini" },
+  somalia: { code: "SO", ru: "Сомали", kz: "Сомали", en: "Somalia" },
+  somaliland: { code: "", ru: "Сомалиленд", kz: "Сомалиленд", en: "Somaliland" },
+  sudan: { code: "SD", ru: "Судан", kz: "Судан", en: "Sudan" },
+  sierraLeone: { code: "SL", ru: "Сьерра-Леоне", kz: "Сьерра-Леоне", en: "Sierra Leone" },
+  uganda: { code: "UG", ru: "Уганда", kz: "Уганда", en: "Uganda" },
+  eritrea: { code: "ER", ru: "Эритрея", kz: "Эритрея", en: "Eritrea" },
+  ethiopia: { code: "ET", ru: "Эфиопия", kz: "Эфиопия", en: "Ethiopia" },
+  southSudan: { code: "SS", ru: "Южный Судан", kz: "Оңтүстік Судан", en: "South Sudan" },
+  marshallIslands: { code: "MH", ru: "Маршалловы Острова", kz: "Маршалл аралдары", en: "Marshall Islands" },
+  micronesia: { code: "FM", ru: "Микронезия", kz: "Микронезия", en: "Micronesia" },
+  palau: { code: "PW", ru: "Палау", kz: "Палау", en: "Palau" },
+  kiribati: { code: "KI", ru: "Кирибати", kz: "Кирибати", en: "Kiribati" },
+  nauru: { code: "NR", ru: "Науру", kz: "Науру", en: "Nauru" },
+  tuvalu: { code: "TV", ru: "Тувалу", kz: "Тувалу", en: "Tuvalu" },
+  tonga: { code: "TO", ru: "Тонга", kz: "Тонга", en: "Tonga" },
+  turksAndCaicos: { code: "TC", ru: "Теркс и Кайкос", kz: "Теркс және Кайкос", en: "Turks and Caicos" },
+  britishVirginIslands: { code: "VG", ru: "Британские Виргинские острова", kz: "Британдық Виргин аралдары", en: "British Virgin Islands" },
+  americanSamoa: { code: "AS", ru: "Американское Самоа", kz: "Америкалық Самоа", en: "American Samoa" },
+  guam: { code: "GU", ru: "Гуам", kz: "Гуам", en: "Guam" },
+  northernMarianaIslands: { code: "MP", ru: "Северные Марианские острова", kz: "Солтүстік Мариан аралдары", en: "Northern Mariana Islands" },
+  tajikistan: { code: "TJ", ru: "Таджикистан", kz: "Тәжікстан", en: "Tajikistan" },
+  turkmenistan: { code: "TM", ru: "Туркменистан", kz: "Түрікменстан", en: "Turkmenistan" },
   fiji: { code: "FJ", ru: "Фиджи", kz: "Фиджи", en: "Fiji" },
 };
 
@@ -283,6 +281,7 @@ export const historicalEntities: Record<HistoricalEntityKey, LocalizedText> = {
 };
 
 type CoinSeed = {
+  category?: "coin" | "banknote";
   group?: CollectionGroup;
   continent?: Continent;
   countryKey?: CountryKey;
@@ -554,6 +553,219 @@ const coinSeeds: CoinSeed[] = [
   { continent: "oceania", countryKey: "fiji", nominal: "1 цент", years: ["1999"] },
 ];
 
+function localized(ru: string, kz: string, en: string): LocalizedText {
+  return { ru, kz, en };
+}
+
+function relatedCountries(keys: CountryKey[]): RelatedCountry[] {
+  return keys.map((countryKey) => ({ countryKey, countryCode: countries[countryKey].code }));
+}
+
+function banknote(continent: Continent, countryKey: CountryKey, nominal: string, years: string[] = ["—"]): CoinSeed {
+  return { category: "banknote", continent, countryKey, nominal, years };
+}
+
+function banknoteGroup(group: CollectionGroup, nominal: string, years: string[] = ["—"], extra: Partial<CoinSeed> = {}): CoinSeed {
+  return { category: "banknote", group, nominal, years, ...extra };
+}
+
+function sharedBanknote(
+  group: CollectionGroup,
+  related: CountryKey[],
+  title: LocalizedText,
+  years: string[] = ["—"],
+  continent?: Continent,
+): CoinSeed {
+  return {
+    category: "banknote",
+    group,
+    continent,
+    nominal: title.ru,
+    nominalText: title,
+    title,
+    years,
+    relatedCountries: relatedCountries(related),
+  };
+}
+
+const eastCaribbeanBanknote = localized("2 Восточно-Карибских доллара", "2 Шығыс Кариб доллары", "2 Eastern Caribbean dollars");
+
+const banknoteSeeds: CoinSeed[] = [
+  banknote("europe", "belarus", "50 руб"),
+  banknote("europe", "bulgaria", "20 лева", ["1991"]),
+  banknote("europe", "bosniaAndHerzegovina", "10 динар"),
+  banknote("europe", "greece", "200 драхма", ["1996"]),
+  banknote("europe", "italy", "1000 лира", ["1990"]),
+  banknote("europe", "moldova", "1 лей"),
+  banknote("europe", "poland", "20 злотых"),
+  banknote("europe", "russia", "5 рублей"),
+  banknote("europe", "russia", "100 рублей", ["2018"]),
+  banknote("europe", "russia", "100 рублей"),
+  banknote("europe", "romania", "2000 лей", ["2000"]),
+  banknote("europe", "northMacedonia", "10 денари"),
+  banknote("europe", "serbia", "10 динар"),
+  banknote("europe", "ukraine", "2 гривны"),
+  banknote("europe", "croatia", "100 000 динар"),
+
+  banknote("asia", "azerbaijan", "1 манат"),
+  banknote("asia", "azerbaijan", "10 манат"),
+  banknote("asia", "afghanistan", "1000 афгани"),
+  banknote("asia", "bangladesh", "2 така"),
+  banknote("asia", "brunei", "1 ринггит / доллар", ["2013"]),
+  banknote("asia", "bhutan", "5 нгултрум"),
+  banknote("asia", "vietnam", "1000 донг"),
+  banknote("asia", "georgia", "10 лари"),
+  banknote("asia", "india", "1 рупия"),
+  banknote("asia", "india", "50 рупия"),
+  banknote("asia", "indonesia", "1000 рупия"),
+  banknote("asia", "iraq", "25 динар"),
+  banknote("asia", "iraq", "25 динар Саддам Хусейн"),
+  banknote("asia", "iran", "1 туман / 10 тыс. риал"),
+  banknote("asia", "iran", "2 туман / 20 тыс. риал"),
+  banknote("asia", "iran", "20 риал", ["1974"]),
+  banknote("asia", "yemen", "100 риал", ["2018"]),
+  banknote("asia", "kazakhstan", "100 тенге"),
+  banknote("asia", "kazakhstan", "10 000 тенге"),
+  banknote("asia", "kazakhstan", "5 000 тенге"),
+  banknote("asia", "kazakhstan", "2 тиын"),
+  banknote("asia", "cambodia", "500 риель"),
+  banknote("asia", "qatar", "1 риал"),
+  banknote("asia", "china", "10 юань"),
+  banknote("asia", "china", "5 дзяо"),
+  banknote("asia", "china", "10 фынь"),
+  banknote("asia", "northKorea", "100 вона"),
+  banknote("asia", "kyrgyzstan", "50 тиын"),
+  banknote("asia", "kyrgyzstan", "20 сом", ["2009"]),
+  banknote("asia", "laos", "500 кип"),
+  banknote("asia", "lebanon", "5000 ливр"),
+  banknote("asia", "malaysia", "1000 ринггит"),
+  banknote("asia", "maldives", "5 руфия", ["2011"]),
+  banknote("asia", "mongolia", "100 тугрик"),
+  banknote("asia", "mongolia", "500 тугрик Чингисхан"),
+  banknote("asia", "myanmar", "20 кьят"),
+  banknote("asia", "nepal", "5 рупи"),
+  banknote("asia", "oman", "100 байса", ["1995"]),
+  banknote("asia", "pakistan", "75 рупия", ["2022"]),
+  banknote("asia", "saudiArabia", "1 риал"),
+  banknote("asia", "singapore", "1 доллар", ["1987"]),
+  banknote("asia", "syria", "100 фунт"),
+  banknote("asia", "syria", "50 фунт"),
+  banknote("asia", "syria", "2000 фунт"),
+  banknote("asia", "tajikistan", "3 сомони", ["2010"]),
+  banknote("asia", "thailand", "100 бат"),
+  banknote("asia", "turkmenistan", "1000 манат"),
+  banknote("asia", "turkmenistan", "1 манат", ["2009"]),
+  banknote("asia", "turkey", "5 лира"),
+  banknote("asia", "turkey", "10 лира"),
+  banknote("asia", "uzbekistan", "5000 сум"),
+  banknote("asia", "philippines", "20 писо", ["2023"]),
+  banknote("asia", "sriLanka", "20 рупии"),
+  banknote("asia", "southKorea", "1000 вона"),
+  banknote("asia", "southKorea", "5000 вона"),
+  banknote("asia", "eastTimor", "100 доллар США"),
+
+  banknote("northAmerica", "bahamas", "1/2 доллар", ["2019"]),
+  banknote("northAmerica", "barbados", "2 доллар"),
+  banknote("northAmerica", "haiti", "10 гурд"),
+  banknote("northAmerica", "guatemala", "1 кетсаль"),
+  banknote("northAmerica", "honduras", "1 лемпира"),
+  banknote("northAmerica", "dominica", "50 песо", ["2023"]),
+  banknote("northAmerica", "cuba", "1 песо"),
+  banknote("northAmerica", "cuba", "3 песо Че Гевара"),
+  banknote("northAmerica", "mexico", "20 песо", ["2021"]),
+  banknote("northAmerica", "nicaragua", "5 кордоба"),
+  banknote("northAmerica", "trinidadAndTobago", "1 доллар"),
+  banknote("northAmerica", "jamaica", "50 доллар", ["2022"]),
+  banknote("northAmerica", "unitedStates", "50 доллар"),
+  banknote("northAmerica", "unitedStates", "100 доллар"),
+  banknote("northAmerica", "elSalvador", "50 доллар США"),
+  sharedBanknote(
+    "regular",
+    ["antiguaAndBarbuda", "dominica", "grenada", "saintKittsAndNevis", "saintLucia", "saintVincentAndTheGrenadines"],
+    eastCaribbeanBanknote,
+    ["2023"],
+    "northAmerica",
+  ),
+
+  banknote("southAmerica", "argentina", "20 песо"),
+  banknote("southAmerica", "argentina", "50 песо", ["2015"]),
+  banknote("southAmerica", "bolivia", "10 боливиано", ["2018"]),
+  banknote("southAmerica", "brazil", "50 реал новос"),
+  banknote("southAmerica", "venezuela", "20000 боливар"),
+  banknote("southAmerica", "venezuela", "2000 боливар"),
+  banknote("southAmerica", "venezuela", "5 боливар"),
+  banknote("southAmerica", "guyana", "20 доллар"),
+  banknote("southAmerica", "colombia", "2000 песо"),
+  banknote("southAmerica", "paraguay", "2000 гуарани", ["2023"]),
+  banknote("southAmerica", "peru", "500 инти"),
+  banknote("southAmerica", "suriname", "100 гульден"),
+
+  banknote("africa", "angola", "10 кванза"),
+  banknote("africa", "burundi", "1000 франк", ["2019"]),
+  banknote("africa", "gambia", "5 даласи"),
+  banknote("africa", "ghana", "20 седи"),
+  banknote("africa", "guinea", "100 цент"),
+  banknote("africa", "guineaBissau", "50 песо"),
+  banknote("africa", "djibouti", "40 франк"),
+  banknote("africa", "egypt", "50 пиастр"),
+  banknote("africa", "zambia", "100 квача"),
+  banknote("africa", "zimbabwe", "100 доллар", ["2020"]),
+  banknote("africa", "kenya", "10 шиллинг", ["2019"]),
+  banknote("africa", "congo", "50 франков"),
+  banknote("africa", "lesotho", "10 малоти", ["2021"]),
+  banknote("africa", "liberia", "5 доллар", ["2016"]),
+  banknote("africa", "libya", "1 динар"),
+  banknote("africa", "mauritius", "25", ["2021"]),
+  banknote("africa", "mauritania", "1000 угия", ["2014"]),
+  banknote("africa", "madagascar", "200 ариари"),
+  banknote("africa", "malawi", "20 квача"),
+  banknote("africa", "mozambique", "50 000 метикал"),
+  banknote("africa", "mozambique", "100 000 метикал"),
+  banknote("africa", "nigeria", "10 найра"),
+  banknote("africa", "rwanda", "500 франк"),
+  banknote("africa", "saoTomeAndPrincipe", "10 000 добр", ["1996"]),
+  banknote("africa", "eswatini", "10 эмалангені", ["2015"]),
+  banknote("africa", "somalia", "50 шиллинг"),
+  banknote("africa", "somaliland", "1000 шиллинг"),
+  banknote("africa", "sudan", "10 фунт", ["2017"]),
+  banknote("africa", "sierraLeone", "1 леоне"),
+  banknote("africa", "tanzania", "500 шиллингов", ["2010"]),
+  banknote("africa", "uganda", "1000 шиллинг"),
+  banknote("africa", "eritrea", "10 накфа", ["1997"]),
+  banknote("africa", "ethiopia", "10 быр"),
+  banknote("africa", "southSudan", "1 фунт"),
+  banknote("africa", "southAfrica", "10 ранд", ["2013"]),
+
+  banknote("oceania", "australia", "5 доллар"),
+  banknote("oceania", "papuaNewGuinea", "20 кина"),
+  banknote("oceania", "solomonIslands", "5 доллар", ["2019"]),
+  banknote("oceania", "solomonIslands", "10 доллар", ["2023"]),
+  banknote("oceania", "tonga", "1 доллар", ["2009"]),
+  sharedBanknote("regular", ["marshallIslands", "micronesia", "palau"], localized("100 долларов США", "100 АҚШ доллары", "100 US dollars"), ["—"], "oceania"),
+  sharedBanknote("regular", ["kiribati", "nauru", "tuvalu"], localized("Австралийский доллар", "Аустралия доллары", "Australian dollar"), ["—"], "oceania"),
+
+  banknoteGroup("historicalStates", "1 рубль", ["—"], { historicalEntityKey: "ussr" }),
+  banknoteGroup("historicalStates", "3 рубля", ["—"], { historicalEntityKey: "ussr" }),
+  banknoteGroup("historicalStates", "5 рублей", ["—"], { historicalEntityKey: "ussr" }),
+  banknoteGroup("historicalStates", "10 рублей", ["—"], { historicalEntityKey: "ussr" }),
+  banknoteGroup("historicalStates", "25 рублей", ["—"], { historicalEntityKey: "ussr" }),
+  banknoteGroup("historicalStates", "50 рублей", ["—"], { historicalEntityKey: "ussr" }),
+  banknoteGroup("historicalStates", "100 рублей", ["—"], { historicalEntityKey: "ussr" }),
+  banknoteGroup("historicalStates", "5 млрд динар", ["—"], { historicalEntityKey: "yugoslavia" }),
+  banknoteGroup("historicalStates", "5 млн динар", ["—"], { historicalEntityKey: "yugoslavia" }),
+  banknoteGroup("historicalStates", "50 млрд динар", ["—"], { historicalEntityKey: "yugoslavia" }),
+
+  banknoteGroup("specialTerritories", "1 рубль", ["—"], { countryKey: "transnistria" }),
+  sharedBanknote("specialTerritories", ["anguilla", "montserrat"], eastCaribbeanBanknote, ["2023"]),
+  sharedBanknote(
+    "specialTerritories",
+    ["turksAndCaicos", "britishVirginIslands", "americanSamoa", "guam", "northernMarianaIslands"],
+    localized("Доллар США", "АҚШ доллары", "US dollar"),
+  ),
+];
+
+const moneySeeds: CoinSeed[] = [...coinSeeds, ...banknoteSeeds];
+
 function slug(value: string) {
   return value
     .toLowerCase()
@@ -574,48 +786,55 @@ function itemName(seed: CoinSeed, language: keyof LocalizedText) {
 }
 
 function descriptionFor(seed: CoinSeed): LocalizedText {
+  const category = seed.category ?? "coin";
+  const itemRu = category === "banknote" ? "банкнота" : "монета";
+  const itemRuCapital = category === "banknote" ? "Банкнота" : "Монета";
+  const itemKz = category === "banknote" ? "банкнот" : "монета";
+  const itemEn = category === "banknote" ? "banknote" : "coin";
   const name = itemName(seed, "ru");
   const nameKz = itemName(seed, "kz");
   const nameEn = itemName(seed, "en");
 
   if (seed.group === "historicalStates") {
     return {
-      ru: `Историческая монета: ${name}.`,
-      kz: `Тарихи монета: ${nameKz}.`,
-      en: `A historical coin from ${nameEn}.`,
+      ru: `Историческая ${itemRu}: ${name}.`,
+      kz: `Тарихи ${itemKz}: ${nameKz}.`,
+      en: `A historical ${itemEn} from ${nameEn}.`,
     };
   }
 
   return {
-    ru: `Монета ${name} из моей коллекции.`,
-    kz: `Менің коллекциямдағы ${nameKz} монетасы.`,
-    en: `A coin from ${nameEn} in my collection.`,
+    ru: `${itemRuCapital} ${name} из моей коллекции.`,
+    kz: `Менің коллекциямдағы ${nameKz} ${itemKz}ы.`,
+    en: `A ${itemEn} from ${nameEn} in my collection.`,
   };
 }
 
 function tagsFor(seed: CoinSeed): LocalizedList {
+  const category = seed.category ?? "coin";
   const group = seed.group ?? "regular";
   const locationRu = seed.continent ? continentLabels[seed.continent].ru : group === "historicalStates" ? "Исторические государства" : "Зависимые и особые территории";
   const locationKz = seed.continent ? continentLabels[seed.continent].kz : group === "historicalStates" ? "Тарихи мемлекеттер" : "Тәуелді және ерекше аумақтар";
   const locationEn = seed.continent ? continentLabels[seed.continent].en : group === "historicalStates" ? "Historical States" : "Dependent and Special Territories";
 
   return {
-    ru: [itemName(seed, "ru"), locationRu, "монета"],
-    kz: [itemName(seed, "kz"), locationKz, "монета"],
-    en: [itemName(seed, "en"), locationEn, "coin"],
+    ru: [itemName(seed, "ru"), locationRu, category === "banknote" ? "банкнота" : "монета"],
+    kz: [itemName(seed, "kz"), locationKz, category === "banknote" ? "банкнот" : "монета"],
+    en: [itemName(seed, "en"), locationEn, category === "banknote" ? "banknote" : "coin"],
   };
 }
 
-export const collection: CollectionItem[] = coinSeeds.flatMap((seed, seedIndex) =>
+export const collection: CollectionItem[] = moneySeeds.flatMap((seed, seedIndex) =>
   seed.years.map((year, yearIndex) => {
+    const category = seed.category ?? "coin";
     const group = seed.group ?? "regular";
     const countryCode = seed.countryKey ? countries[seed.countryKey].code : "";
     const uniqueIndex = `${seedIndex + 1}-${yearIndex + 1}`;
     const locationKey = seed.countryKey ?? seed.historicalEntityKey ?? seed.relatedCountries?.map((country) => country.countryKey).join("-");
 
     return {
-      id: `coin-${group}-${locationKey}-${slug(seed.nominal)}-${slug(year)}-${uniqueIndex}`,
-      category: "coin",
+      id: `${category}-${group}-${locationKey}-${slug(seed.nominal)}-${slug(year)}-${uniqueIndex}`,
+      category,
       collectionGroup: group,
       continent: seed.continent,
       countryKey: seed.countryKey,

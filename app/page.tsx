@@ -6,6 +6,7 @@ import CollectionCatalog from "./CollectionCatalog";
 import MobileNav from "./MobileNav";
 import ScrollReveal from "./ScrollReveal";
 import { collection } from "../data/collection";
+import type { CollectionCategory } from "../data/collection";
 import type { Language } from "../data/translations";
 import { languages, translations } from "../data/translations";
 
@@ -57,7 +58,13 @@ const contacts = [
   },
 ];
 
-function getMoneyStats(category: "coin" | "banknote") {
+type MoneyCategory = Extract<CollectionCategory, "coin" | "banknote">;
+
+function getItemCountByCategory(category: CollectionCategory) {
+  return collection.filter((item) => item.category === category).length;
+}
+
+function getCountryStatsByCategory(category: MoneyCategory) {
   const categoryItems = collection.filter((item) => item.category === category);
 
   const countryKeys = new Set(
@@ -88,10 +95,9 @@ function getMoneyStats(category: "coin" | "banknote") {
   );
 
   return {
-    count: categoryItems.length,
-    countries: countryKeys.size,
-    specialTerritories: specialTerritoryKeys.size,
-    historicalStates: historicalStateKeys.size,
+    countriesCount: countryKeys.size,
+    specialTerritoriesCount: specialTerritoryKeys.size,
+    historicalStatesCount: historicalStateKeys.size,
   };
 }
 
@@ -175,34 +181,67 @@ export default function Home() {
     [language],
   );
 
-  const coinStats = getMoneyStats("coin");
-  const banknoteStats = getMoneyStats("banknote");
-  const blisterCount = collection.filter((item) => item.category === "blister").length;
+  const coinCount = getItemCountByCategory("coin");
+  const banknoteCount = getItemCountByCategory("banknote");
+  const blisterCount = getItemCountByCategory("blister");
+  const countryStatsByCategory = {
+    coin: getCountryStatsByCategory("coin"),
+    banknote: getCountryStatsByCategory("banknote"),
+  };
 
-  const stats = [
+  const totalStats = [
     {
-      value: coinStats.count,
+      value: coinCount,
       label: translations.stats.coins[language],
     },
     {
-      value: banknoteStats.count,
+      value: banknoteCount,
       label: translations.stats.banknotes[language],
     },
     {
       value: blisterCount,
       label: translations.stats.blisters[language],
     },
+  ];
+
+  const coinGeographyStats = [
     {
-      value: coinStats.countries,
+      value: countryStatsByCategory.coin.countriesCount,
       label: translations.stats.countries[language],
     },
     {
-      value: coinStats.specialTerritories,
+      value: countryStatsByCategory.coin.specialTerritoriesCount,
       label: translations.stats.specialTerritories[language],
     },
     {
-      value: coinStats.historicalStates,
+      value: countryStatsByCategory.coin.historicalStatesCount,
       label: translations.stats.historicalStates[language],
+    },
+  ];
+
+  const banknoteGeographyStats = [
+    {
+      value: countryStatsByCategory.banknote.countriesCount,
+      label: translations.stats.countries[language],
+    },
+    {
+      value: countryStatsByCategory.banknote.specialTerritoriesCount,
+      label: translations.stats.specialTerritories[language],
+    },
+    {
+      value: countryStatsByCategory.banknote.historicalStatesCount,
+      label: translations.stats.historicalStates[language],
+    },
+  ];
+
+  const geographyGroups = [
+    {
+      title: translations.stats.coinGeography[language],
+      items: coinGeographyStats,
+    },
+    {
+      title: translations.stats.banknoteGeography[language],
+      items: banknoteGeographyStats,
     },
   ];
 
@@ -331,38 +370,61 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="about" className="relative z-10 border-y border-[#d8b45f]/10 bg-[#173d2d]">
-        <div data-reveal className="mx-auto grid max-w-7xl gap-8 px-5 py-14 sm:py-20 lg:grid-cols-[0.8fr_1.2fr] lg:gap-10 lg:px-8">
-          <div>
-            <p className="text-sm font-bold uppercase tracking-[0.28em] text-[#f2cf7d]">
-              {translations.about.eyebrow[language]}
-            </p>
-            <h2 className="mt-4 text-3xl font-black text-white sm:text-4xl">
-              {translations.about.title[language]}
-            </h2>
-          </div>
-          <p className="text-base leading-7 text-[#efe8d0]/82 sm:text-lg sm:leading-8">
-            {translations.about.description[language]}
+      <section className="relative z-10 mx-auto max-w-7xl px-5 py-12 sm:py-16 lg:px-8">
+        <div data-reveal>
+          <p className="text-sm font-bold uppercase tracking-[0.28em] text-[#f2cf7d]">
+            {translations.stats.total[language]}
           </p>
-        </div>
-      </section>
-
-      <section className="relative z-10 mx-auto grid max-w-7xl grid-cols-2 gap-3 px-5 py-12 sm:grid-cols-3 sm:gap-4 sm:py-16 xl:grid-cols-6 lg:px-8">
-        {stats.map((item, index) => (
-          <div
-            key={item.label}
-            data-reveal
-            data-reveal-delay={index * 80}
-            className="rounded-lg border border-[#d8b45f]/18 bg-[#efe8d0]/7 p-4 transition hover:-translate-y-1 hover:border-[#d8b45f]/55 hover:bg-[#173d2d] sm:p-6"
-          >
-            <p className="text-3xl font-black text-[#f2cf7d] sm:text-4xl">
-              {item.value}
-            </p>
-            <p className="mt-2 text-xs uppercase tracking-[0.16em] text-[#efe8d0]/65 sm:text-sm sm:tracking-[0.2em]">
-              {item.label}
-            </p>
+          <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
+            {totalStats.map((item, index) => (
+              <div
+                key={item.label}
+                data-reveal
+                data-reveal-delay={index * 80}
+                className="rounded-lg border border-[#d8b45f]/18 bg-[#efe8d0]/7 p-4 transition hover:-translate-y-1 hover:border-[#d8b45f]/55 hover:bg-[#173d2d] sm:p-6"
+              >
+                <p className="text-3xl font-black text-[#f2cf7d] sm:text-4xl">
+                  {item.value}
+                </p>
+                <p className="mt-2 text-xs uppercase tracking-[0.16em] text-[#efe8d0]/65 sm:text-sm sm:tracking-[0.2em]">
+                  {item.label}
+                </p>
+              </div>
+            ))}
           </div>
-        ))}
+        </div>
+
+        <div className="mt-8 grid gap-5 lg:grid-cols-2">
+          {geographyGroups.map((group, groupIndex) => (
+            <div
+              key={group.title}
+              data-reveal
+              data-reveal-delay={220 + groupIndex * 120}
+              className="rounded-lg border border-[#d8b45f]/12 bg-[#173d2d]/42 p-4 sm:p-5"
+            >
+              <h3 className="text-sm font-bold uppercase tracking-[0.24em] text-[#f2cf7d]">
+                {group.title}
+              </h3>
+              <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3">
+                {group.items.map((item, index) => (
+                  <div
+                    key={`${group.title}-${item.label}`}
+                    data-reveal
+                    data-reveal-delay={300 + groupIndex * 120 + index * 70}
+                    className="rounded-lg border border-[#d8b45f]/18 bg-[#efe8d0]/7 p-4 transition hover:-translate-y-1 hover:border-[#d8b45f]/55 hover:bg-[#173d2d] sm:p-5"
+                  >
+                    <p className="text-3xl font-black text-[#f2cf7d]">
+                      {item.value}
+                    </p>
+                    <p className="mt-2 text-xs uppercase tracking-[0.16em] text-[#efe8d0]/65">
+                      {item.label}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
       </section>
 
       <section id="collection" className="relative z-10 border-y border-[#d8b45f]/10 bg-[#173d2d]">

@@ -167,17 +167,20 @@ function FlagSvg({ code }: { code: FlagCode }) {
 
 function CountryFlag({
   countryCode,
+  countryKey,
   countryName,
   size = "compact",
 }: {
   countryCode?: string;
+  countryKey?: string;
   countryName?: string;
   size?: "compact" | "card" | "detail";
 }) {
   const [failed, setFailed] = useState(false);
   const normalizedCode = countryCode?.trim().toLowerCase();
   const isSwissFlag = normalizedCode === "ch";
-  const shouldContainFlag = isSwissFlag || normalizedCode === "il";
+  const isNepalFlag = normalizedCode === "np" || countryKey === "nepal";
+  const shouldContainFlag = isSwissFlag || isNepalFlag || normalizedCode === "il";
   const sizeClass =
     isSwissFlag
       ? size === "compact"
@@ -185,11 +188,20 @@ function CountryFlag({
         : size === "detail"
           ? "h-10 w-10 rounded-md text-[0.55rem]"
           : "h-11 w-11 rounded-md text-[0.55rem]"
+      : isNepalFlag
+        ? size === "compact"
+          ? "h-6 w-7 rounded-[0.25rem] text-[0.5rem]"
+          : size === "detail"
+            ? "h-10 w-12 rounded-md text-[0.55rem]"
+            : "h-14 w-[4.5rem] rounded-md text-[0.55rem]"
       : size === "card"
       ? "h-8 w-12 rounded-md text-[0.6rem]"
       : size === "detail"
         ? "h-8 w-12 rounded-[0.3rem] text-[0.6rem]"
         : "h-5 w-7 rounded-[0.25rem] text-[0.55rem]";
+  const imageClass = isNepalFlag
+    ? "h-full w-auto max-w-full object-contain"
+    : `h-full w-full ${shouldContainFlag ? "object-contain" : "object-cover"}`;
 
   return (
     <span
@@ -199,7 +211,7 @@ function CountryFlag({
         <img
           src={`https://flagcdn.com/${normalizedCode}.svg`}
           alt={countryName ? `${countryName} flag` : ""}
-          className={`h-full w-full ${shouldContainFlag ? "object-contain" : "object-cover"}`}
+          className={imageClass}
           loading="lazy"
           decoding="async"
           onError={() => setFailed(true)}
@@ -255,13 +267,15 @@ function CountryLine({
   const entries = countryEntries(item, language);
 
   if (!entries.length) return null;
-  if (entries.length === 1) return <span>{entries[0].name}</span>;
+  if (entries.length === 1) {
+    return <span>{entries[0].name}</span>;
+  }
 
   return (
     <span className="mt-1 grid min-w-0 gap-1.5 align-middle">
       {entries.map((entry) => (
         <span key={entry.key} className="inline-flex min-w-0 items-center gap-1.5">
-          <CountryFlag countryCode={entry.code} countryName={entry.name} size="compact" />
+          <CountryFlag countryCode={entry.code} countryKey={entry.key} countryName={entry.name} size={size} />
           <span>{entry.name}</span>
         </span>
       ))}
@@ -633,7 +647,7 @@ function ItemCard({
         {item.historicalEntityKey ? (
           <HistoricalMark />
         ) : country && !item.relatedCountries?.length && (
-          <CountryFlag countryCode={code} countryName={country} size="card" />
+          <CountryFlag countryCode={code} countryKey={"countryKey" in item ? item.countryKey : undefined} countryName={country} size="card" />
         )}
       </div>
       <p className="mt-4 leading-7 text-[#efe8d0]/72">
@@ -1355,56 +1369,5 @@ export default function CollectionCatalog({
     );
   }
 
-  return (
-    <div
-      ref={rootRef}
-      id="collection"
-      className="relative z-10 mx-auto max-w-7xl px-5 py-12 sm:py-16 lg:px-8"
-    >
-      <CatalogBreadcrumbs
-        config={null}
-        selected={null}
-        selectedItem={null}
-        language={language}
-        onCollection={backToCollection}
-        onCategories={backToCollection}
-        onList={backToCollection}
-      />
-      <div data-reveal className="mb-8 flex flex-col justify-between gap-4 md:flex-row md:items-end">
-        <div>
-          <p className="text-sm font-bold uppercase tracking-[0.28em] text-[#f2cf7d]">
-            {translations.catalog.collectionRoot[language]}
-          </p>
-          <h2 className="mt-4 text-3xl font-black text-white sm:text-4xl">
-            World Money Collection
-          </h2>
-        </div>
-        <p className="max-w-lg text-[#efe8d0]/72">
-          {translations.about.description[language]}
-        </p>
-      </div>
-
-      <div className="grid gap-5 md:grid-cols-3">
-      {catalogConfigs.map((config) => (
-        <button
-          key={config.category}
-          type="button"
-          onClick={() => openCategory(config.category)}
-          className="group rounded-lg border border-[#d8b45f]/22 bg-[#173d2d] p-6 text-left text-white shadow-[0_18px_48px_rgba(0,0,0,0.2)] transition hover:-translate-y-2 hover:border-[#d8b45f]/65 hover:bg-[#1c4c36]"
-        >
-          <p className="text-sm font-bold uppercase tracking-[0.22em] text-[#f2cf7d]">
-            {translations.nav[config.eyebrowKey][language]}
-          </p>
-          <h3 className="mt-4 text-2xl font-black">
-            {translations.nav[config.eyebrowKey][language]}
-          </h3>
-          <p className="mt-4 leading-7 text-[#efe8d0]/70">
-            {translations.catalog[config.descriptionKey][language]}
-          </p>
-          <span className="mt-6 block h-1 w-14 rounded-full bg-[#d8b45f]/60 transition group-hover:w-20 group-hover:bg-[#f2cf7d]" />
-        </button>
-      ))}
-      </div>
-    </div>
-  );
+  return <div ref={rootRef} aria-hidden="true" />;
 }

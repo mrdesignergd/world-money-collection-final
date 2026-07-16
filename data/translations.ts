@@ -131,6 +131,9 @@ export const translations = {
     },
   },
   stats: {
+    total: { ru: "Общий итог", kz: "Жалпы қорытынды", en: "Total collection" },
+    coinGeography: { ru: "География монет", kz: "Монеталар географиясы", en: "Coin geography" },
+    banknoteGeography: { ru: "География банкнот", kz: "Банкноттар географиясы", en: "Banknote geography" },
     coins: { ru: "монет", kz: "монета", en: "coins" },
     banknotes: { ru: "банкнот", kz: "банкнот", en: "banknotes" },
     blisters: { ru: "блистеров", kz: "блистер", en: "blisters" },

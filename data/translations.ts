@@ -1,4 +1,4 @@
-import type { BlisterTheme, CollectionCategory, CollectionGroup, Continent } from "./collection";
+import type { BlisterTheme, CollectionCategory, CollectionGroup, Continent, KazakhstanCoinGroup } from "./collection";
 
 export type Language = "ru" | "kz" | "en";
 
@@ -374,6 +374,51 @@ export const translations = {
       en: "Historical States",
     },
   } satisfies Record<CollectionGroup, LocalizedText>,
+  coinSpecialCategory: {
+    kazakhstanCoins: { ru: "Казахстан", kz: "Қазақстан", en: "Kazakhstan" },
+  },
+  kazakhstanCoinGroup: {
+    kazakhstanHistoricalFigures: {
+      ru: "Исторические личности",
+      kz: "Тарихи тұлғалар",
+      en: "Historical figures",
+    },
+    kazakhstanAnniversaryDates: {
+      ru: "Памятные даты",
+      kz: "Атаулы даталар",
+      en: "Commemorative dates",
+    },
+    kazakhstanHistory: {
+      ru: "История",
+      kz: "Тарих",
+      en: "History",
+    },
+    kazakhstanTraditions: {
+      ru: "Традиции",
+      kz: "Салт дәстүр",
+      en: "Traditions",
+    },
+    kazakhstanSevenTreasures: {
+      ru: "Семь сокровищ",
+      kz: "Жеті қазына",
+      en: "Seven treasures",
+    },
+    kazakhstanSakaStyle: {
+      ru: "Сакский стиль",
+      kz: "Сақ стилі",
+      en: "Saka style",
+    },
+    kazakhstanCities: {
+      ru: "Города Казахстана",
+      kz: "Қазақстан қалалары",
+      en: "Cities of Kazakhstan",
+    },
+    kazakhstanCirculation: {
+      ru: "Оборотные монеты",
+      kz: "Айналым монеталары",
+      en: "Circulation coins",
+    },
+  } satisfies Record<KazakhstanCoinGroup, LocalizedText>,
   coinCatalogTitle: {
     europe: { ru: "Монеты Европы", kz: "Еуропа монеталары", en: "Coins of Europe" },
     asia: { ru: "Монеты Азии", kz: "Азия монеталары", en: "Coins of Asia" },

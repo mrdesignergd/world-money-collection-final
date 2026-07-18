@@ -2,6 +2,15 @@ import type { LocalizedList, LocalizedText } from "./translations";
 
 export type CollectionCategory = "coin" | "banknote" | "blister";
 export type CollectionGroup = "regular" | "specialTerritories" | "historicalStates";
+export type KazakhstanCoinGroup =
+  | "kazakhstanHistoricalFigures"
+  | "kazakhstanAnniversaryDates"
+  | "kazakhstanHistory"
+  | "kazakhstanTraditions"
+  | "kazakhstanSevenTreasures"
+  | "kazakhstanSakaStyle"
+  | "kazakhstanCities"
+  | "kazakhstanCirculation";
 
 export type Continent =
   | "europe"
@@ -57,6 +66,7 @@ type BaseItem = {
 export type MoneyItem = BaseItem & {
   category: "coin" | "banknote";
   continent?: Continent;
+  coinGroup?: KazakhstanCoinGroup;
   countryKey?: CountryKey;
   countryCode?: string;
   historicalEntityKey?: HistoricalEntityKey;
@@ -284,6 +294,7 @@ type CoinSeed = {
   category?: "coin" | "banknote";
   group?: CollectionGroup;
   continent?: Continent;
+  coinGroup?: KazakhstanCoinGroup;
   countryKey?: CountryKey;
   historicalEntityKey?: HistoricalEntityKey;
   relatedCountries?: RelatedCountry[];
@@ -303,6 +314,116 @@ const continentLabels: Record<Continent, LocalizedText> = {
   southAmerica: { ru: "Южная Америка", kz: "Оңтүстік Америка", en: "South America" },
   oceania: { ru: "Океания", kz: "Океания", en: "Oceania" },
 };
+
+function kazakhstanCoin(
+  coinGroup: KazakhstanCoinGroup,
+  title: LocalizedText,
+  nominalText: LocalizedText,
+  years: string[] = ["—"],
+): CoinSeed {
+  return {
+    coinGroup,
+    countryKey: "kazakhstan",
+    nominal: nominalText.ru,
+    nominalText,
+    title,
+    years,
+    description: {
+      ru: `Монета Казахстана из моей коллекции: ${title.ru}.`,
+      kz: `Менің коллекциямдағы Қазақстан монетасы: ${title.kz}.`,
+      en: `A Kazakh coin from my collection: ${title.en}.`,
+    },
+    tags: {
+      ru: ["Казахстан", title.ru, nominalText.ru, "монета"],
+      kz: ["Қазақстан", title.kz, nominalText.kz, "монета"],
+      en: ["Kazakhstan", title.en, nominalText.en, "coin"],
+    },
+  };
+}
+
+function kazakhstanThemedCoin(
+  coinGroup: KazakhstanCoinGroup,
+  ruName: string,
+  kzName: string,
+  enName: string,
+  ruNominal: string,
+  kzNominal: string,
+  enNominal: string,
+  year?: string,
+): CoinSeed {
+  return kazakhstanCoin(
+    coinGroup,
+    localized(`${ruName} — ${ruNominal}`, `${kzName} — ${kzNominal}`, `${enName} — ${enNominal}`),
+    localized(ruNominal, kzNominal, enNominal),
+    year ? [year] : ["—"],
+  );
+}
+
+function kazakhstanCirculationCoin(ruNominal: string, kzNominal: string, enNominal: string, year: string): CoinSeed {
+  return kazakhstanCoin(
+    "kazakhstanCirculation",
+    localized(ruNominal, kzNominal, enNominal),
+    localized(ruNominal, kzNominal, enNominal),
+    [year],
+  );
+}
+
+function coinLocalized(
+  continent: Continent,
+  countryKey: CountryKey,
+  title: LocalizedText,
+  nominalText: LocalizedText,
+  years: string[],
+): CoinSeed {
+  const country = countries[countryKey];
+
+  return {
+    continent,
+    countryKey,
+    nominal: nominalText.ru,
+    nominalText,
+    title,
+    years,
+    description: {
+      ru: `Монета ${country.ru} из моей коллекции: ${title.ru}.`,
+      kz: `Менің коллекциямдағы ${country.kz} монетасы: ${title.kz}.`,
+      en: `A coin from ${country.en} in my collection: ${title.en}.`,
+    },
+    tags: {
+      ru: [country.ru, title.ru, nominalText.ru, "монета"],
+      kz: [country.kz, title.kz, nominalText.kz, "монета"],
+      en: [country.en, title.en, nominalText.en, "coin"],
+    },
+  };
+}
+
+function historicalCoinLocalized(
+  historicalEntityKey: HistoricalEntityKey,
+  title: LocalizedText,
+  nominalText: LocalizedText,
+  years: string[],
+): CoinSeed {
+  const entity = historicalEntities[historicalEntityKey];
+
+  return {
+    group: "historicalStates",
+    historicalEntityKey,
+    nominal: nominalText.ru,
+    nominalText,
+    title,
+    years,
+    description: {
+      ru: `Историческая монета: ${entity.ru}. ${title.ru}.`,
+      kz: `Тарихи монета: ${entity.kz}. ${title.kz}.`,
+      en: `A historical coin from ${entity.en}: ${title.en}.`,
+    },
+    tags: {
+      ru: [entity.ru, title.ru, nominalText.ru, "историческая монета"],
+      kz: [entity.kz, title.kz, nominalText.kz, "тарихи монета"],
+      en: [entity.en, title.en, nominalText.en, "historical coin"],
+    },
+  };
+}
 
 const coinSeeds: CoinSeed[] = [
   { continent: "asia", countryKey: "azerbaijan", nominal: "10 кэпик", years: ["—"] },
@@ -342,6 +463,8 @@ const coinSeeds: CoinSeed[] = [
   { continent: "asia", countryKey: "turkey", nominal: "5 куруш", years: ["2020"] },
   { continent: "asia", countryKey: "turkey", nominal: "10 куруш", years: ["2006", "2011"] },
   { continent: "asia", countryKey: "turkey", nominal: "50 куруш", years: ["2022"] },
+  coinLocalized("asia", "turkey", localized("1000 лир", "1000 лира", "1,000 lira"), localized("1000 лир", "1000 лира", "1,000 lira"), ["1990"]),
+  coinLocalized("asia", "tajikistan", localized("3 сомони", "3 сомони", "3 somoni"), localized("3 сомони", "3 сомони", "3 somoni"), ["2019"]),
   { continent: "asia", countryKey: "uzbekistan", nominal: "5 сум", years: ["1997"] },
   { continent: "asia", countryKey: "uzbekistan", nominal: "1 сум", years: ["2000"] },
   { continent: "asia", countryKey: "uzbekistan", nominal: "50 сум", years: ["2013"] },
@@ -350,7 +473,75 @@ const coinSeeds: CoinSeed[] = [
   { continent: "asia", countryKey: "uzbekistan", nominal: "500 сум", years: ["2018"] },
   { continent: "asia", countryKey: "hongKong", nominal: "5 долларов", years: ["1993"] },
   { continent: "asia", countryKey: "hongKong", nominal: "20 центов", years: ["1997"] },
-  { continent: "asia", countryKey: "kazakhstan", nominal: "5 тиын", years: ["1993"] },
+  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Магжан Жумабаев", "Мағжан Жұмабаев", "Magzhan Zhumabayev", "50 тенге", "50 теңге", "50 tenge", "2013"),
+  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Ильяс Есенберлин", "Ілияс Есенберлин", "Ilyas Esenberlin", "50 тенге", "50 теңге", "50 tenge", "2015"),
+  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Абай Кунанбаев", "Абай Құнанбаев", "Abai Qunanbaiuly", "100 тенге", "100 теңге", "100 tenge", "2020"),
+  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Суюнбай", "Сүйінбай", "Suyinbai", "200 тенге", "200 теңге", "200 tenge", "2023"),
+  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Курмангазы", "Құрманғазы", "Kurmangazy", "200 тенге", "200 теңге", "200 tenge", "2023"),
+  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Аль-Фараби", "Әл-Фараби", "Al-Farabi", "200 тенге", "200 теңге", "200 tenge", "2023"),
+  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Динмухамед Кунаев", "Дінмұхаммед Қонаев", "Dinmukhamed Kunayev", "50 тенге", "50 теңге", "50 tenge", "2012"),
+  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Жумабек Ташенов", "Жұмабек Ташенов", "Zhumabek Tashenov", "50 тенге", "50 теңге", "50 tenge", "2015"),
+  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Жамбыл Жабаев", "Жамбыл Жабаев", "Zhambyl Zhabayev", "20 тенге", "20 теңге", "20 tenge", "1996"),
+  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Махамбет Утемисулы", "Махамбет Өтемісұлы", "Makhambet Utemisuly", "50 тенге", "50 теңге", "50 tenge", "2003"),
+  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Аль-Фараби", "Әл-Фараби", "Al-Farabi", "20 тенге", "20 теңге", "20 tenge", "1993"),
+  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Шокан Уалиханов", "Шоқан Уәлиханов", "Shoqan Walikhanov", "50 тенге", "50 теңге", "50 tenge", "2014"),
+  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Алихан Бокейханов", "Алихан Бөкейханов", "Alikhan Bokeikhanov", "100 тенге", "100 теңге", "100 tenge", "2016"),
+  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Абулхаир", "Әбілхайыр", "Abulkhair", "100 тенге", "100 теңге", "100 tenge", "2016"),
+  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Малик Габдуллин", "Мәлік Ғабдуллин", "Malik Gabdullin", "50 тенге", "50 теңге", "50 tenge", "2015"),
+  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Алькей Маргулан", "Әлкей Марғұлан", "Alkey Margulan", "50 тенге", "50 теңге", "50 tenge", "2004"),
+  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Кожанасыр", "Қожанасыр", "Kozhanasyr", "50 тенге", "50 теңге", "50 tenge", "2015"),
+  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Тарас Шевченко", "Тарас Шевченко", "Taras Shevchenko", "50 тенге", "50 теңге", "50 tenge", "2014"),
+  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Хамит Ергали", "Хамит Ерғали", "Khamit Yergali", "100 тенге", "100 теңге", "100 tenge", "2016"),
+  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Токтагали Жангелдин", "Тоқтағали Жангелдин", "Toktagali Zhangeldin", "100 тенге", "100 теңге", "100 tenge", "2016"),
+  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Ермукан Бекмаханов", "Ермұқан Бекмаханов", "Yermukhan Bekmakhanov", "50 тенге", "50 теңге", "50 tenge", "2015"),
+
+  kazakhstanThemedCoin("kazakhstanAnniversaryDates", "70 лет Великой Победе", "Ұлы жеңіске 70 жыл", "70th anniversary of the Great Victory", "50 тенге", "50 теңге", "50 tenge", "2015"),
+  kazakhstanThemedCoin("kazakhstanAnniversaryDates", "75 лет Великой Победе", "Ұлы жеңіске 75 жыл", "75th anniversary of the Great Victory", "100 тенге", "100 теңге", "100 tenge", "2020"),
+  kazakhstanThemedCoin("kazakhstanAnniversaryDates", "30 лет Конституции", "30 жыл Конституция", "30th anniversary of the Constitution", "100 тенге", "100 теңге", "100 tenge", "2025"),
+  kazakhstanThemedCoin("kazakhstanAnniversaryDates", "80 лет Победы", "80 жыл Жеңіс", "80th anniversary of Victory", "200 тенге", "200 теңге", "200 tenge", "2025"),
+  kazakhstanThemedCoin("kazakhstanAnniversaryDates", "50 лет ООН", "БҰҰ-ға 50 жыл", "50th anniversary of the UN", "20 тенге", "20 теңге", "20 tenge", "1995"),
+  kazakhstanThemedCoin("kazakhstanAnniversaryDates", "Казахское ханство", "Қазақ хандығы", "Kazakh Khanate", "50 тенге", "50 теңге", "50 tenge", "2015"),
+  kazakhstanThemedCoin("kazakhstanAnniversaryDates", "1500 лет Туркестану", "Түркістан 1500 жыл", "1500th anniversary of Turkistan", "50 тенге", "50 теңге", "50 tenge", "2000"),
+  kazakhstanThemedCoin("kazakhstanAnniversaryDates", "20 лет Желтоксану", "Желтоқсан 20 жыл", "20th anniversary of Jeltoqsan", "50 тенге", "50 теңге", "50 tenge", "2006"),
+
+  kazakhstanThemedCoin("kazakhstanHistory", "Тайказан", "Тайқазан", "Taikazan", "50 тенге", "50 теңге", "50 tenge", "2014"),
+  kazakhstanThemedCoin("kazakhstanHistory", "Аполлон-Союз", "Аполлон-Союз", "Apollo-Soyuz", "50 тенге", "50 теңге", "50 tenge", "2009"),
+  kazakhstanThemedCoin("kazakhstanHistory", "Луноход", "Луноход", "Lunokhod", "50 тенге", "50 теңге", "50 tenge", "2010"),
+
+  kazakhstanThemedCoin("kazakhstanTraditions", "Жар-жар", "Жар-жар", "Zhar-zhar", "200 тенге", "200 теңге", "200 tenge", "2023"),
+  kazakhstanThemedCoin("kazakhstanTraditions", "Тусау кесу", "Тұсау кесу", "Tusau kesu", "50 тенге", "50 теңге", "50 tenge", "2007"),
+  kazakhstanThemedCoin("kazakhstanTraditions", "Наурыз мейрамы", "Наурыз мейрамы", "Nauryz holiday", "50 тенге", "50 теңге", "50 tenge", "2012"),
+  kazakhstanThemedCoin("kazakhstanTraditions", "Ерулик", "Ерулік", "Yerulik", "200 тенге", "200 теңге", "200 tenge", "2024"),
+  kazakhstanThemedCoin("kazakhstanTraditions", "Казах куреси", "Қазақ күресі", "Kazakh kuresi", "200 тенге", "200 теңге", "200 tenge", "2025"),
+
+  kazakhstanThemedCoin("kazakhstanSevenTreasures", "Ер жигит", "Ер жігіт", "Er zhigit", "100 тенге", "100 теңге", "100 tenge"),
+  kazakhstanThemedCoin("kazakhstanSevenTreasures", "Сулу айел", "Сұлу әйел", "Sulu ayel", "100 тенге", "100 теңге", "100 tenge"),
+  kazakhstanThemedCoin("kazakhstanSevenTreasures", "Кумай тазы", "Құмай тазы", "Kumai tazy", "100 тенге", "100 теңге", "100 tenge"),
+  kazakhstanThemedCoin("kazakhstanSevenTreasures", "Жуйрик ат", "Жүйрік ат", "Zhuyrik at", "100 тенге", "100 теңге", "100 tenge"),
+  kazakhstanThemedCoin("kazakhstanSevenTreasures", "Акылы билим", "Ақыл білім", "Akyl bilim", "100 тенге", "100 теңге", "100 tenge"),
+  kazakhstanThemedCoin("kazakhstanSevenTreasures", "Берен мылтык", "Берен мылтық", "Beren myltyk", "100 тенге", "100 теңге", "100 tenge"),
+  kazakhstanThemedCoin("kazakhstanSevenTreasures", "Кыран буркит", "Қыран бүркіт", "Kyran burkit", "100 тенге", "100 теңге", "100 tenge"),
+
+  kazakhstanThemedCoin("kazakhstanSakaStyle", "Крылатый барс", "Қанатты барыс", "Winged snow leopard", "100 тенге", "100 теңге", "100 tenge"),
+  kazakhstanThemedCoin("kazakhstanSakaStyle", "Маска", "Маска", "Mask", "100 тенге", "100 теңге", "100 tenge"),
+  kazakhstanThemedCoin("kazakhstanSakaStyle", "Свернувшийся барс", "Бүктетілген барыс", "Curled snow leopard", "100 тенге", "100 теңге", "100 tenge"),
+  kazakhstanThemedCoin("kazakhstanSakaStyle", "Золотое украшение в виде оленя", "Бұғы түріндегі алтын әшекей", "Gold deer-shaped ornament", "100 тенге", "100 теңге", "100 tenge"),
+  kazakhstanThemedCoin("kazakhstanSakaStyle", "Олень", "Бұғы", "Deer", "100 тенге", "100 теңге", "100 tenge"),
+
+  kazakhstanThemedCoin("kazakhstanCities", "Атырау", "Атырау", "Atyrau", "50 тенге", "50 теңге", "50 tenge", "2012"),
+  kazakhstanThemedCoin("kazakhstanCities", "Актау", "Ақтау", "Aktau", "50 тенге", "50 теңге", "50 tenge", "2012"),
+  kazakhstanThemedCoin("kazakhstanCities", "Павлодар", "Павлодар", "Pavlodar", "50 тенге", "50 теңге", "50 tenge", "2012"),
+
+  kazakhstanCirculationCoin("1 тенге", "1 теңге", "1 tenge", "1993"),
+  kazakhstanCirculationCoin("3 тенге", "3 теңге", "3 tenge", "1993"),
+  kazakhstanCirculationCoin("5 тенге", "5 теңге", "5 tenge", "1993"),
+  kazakhstanCirculationCoin("20 тенге", "20 теңге", "20 tenge", "1993"),
+  kazakhstanCirculationCoin("2 тиын", "2 тиын", "2 tiyn", "1993"),
+  kazakhstanCirculationCoin("5 тиын", "5 тиын", "5 tiyn", "1993"),
+  kazakhstanCirculationCoin("10 тенге", "10 теңге", "10 tenge", "1993"),
+  kazakhstanCirculationCoin("10 тиын", "10 тиын", "10 tiyn", "1993"),
+  kazakhstanCirculationCoin("20 тиын", "20 тиын", "20 tiyn", "1993"),
+  kazakhstanCirculationCoin("50 тиын", "50 тиын", "50 tiyn", "1993"),
   { continent: "asia", countryKey: "southKorea", nominal: "10 вона", years: ["2010"] },
   { continent: "asia", countryKey: "southKorea", nominal: "50 вона", years: ["2011"] },
   { continent: "asia", countryKey: "southKorea", nominal: "100 вона", years: ["1991"] },
@@ -364,7 +555,7 @@ const coinSeeds: CoinSeed[] = [
   { continent: "europe", countryKey: "belgium", nominal: "20 франков", years: ["1981"] },
   { continent: "europe", countryKey: "belgium", nominal: "5 франков", years: ["1986"] },
   { continent: "europe", countryKey: "belgium", nominal: "25 сантимов", years: ["1938"] },
-  { continent: "europe", countryKey: "belgium", nominal: "1 франк", years: ["1952"] },
+  { continent: "europe", countryKey: "belgium", nominal: "1 франк", years: ["1952", "1975"] },
   { continent: "europe", countryKey: "bulgaria", nominal: "2 стотинки", years: ["1974"] },
   { continent: "europe", countryKey: "bulgaria", nominal: "1 лев", years: ["2002"] },
   { continent: "europe", countryKey: "unitedKingdom", nominal: "1 фунт", years: ["1985", "1992"] },
@@ -381,14 +572,15 @@ const coinSeeds: CoinSeed[] = [
   { continent: "europe", countryKey: "greece", nominal: "10 драхм", years: ["1976"] },
   { continent: "europe", countryKey: "greece", nominal: "50 лепт", years: ["1970"] },
   { continent: "europe", countryKey: "denmark", nominal: "25 эре", years: ["1971"] },
-  { continent: "europe", countryKey: "europeanUnion", nominal: "1 евро", years: ["2002", "2002"] },
-  { continent: "europe", countryKey: "europeanUnion", nominal: "1 цент", years: ["2010"] },
-  { continent: "europe", countryKey: "europeanUnion", nominal: "2 цента", years: ["2012"] },
-  { continent: "europe", countryKey: "europeanUnion", nominal: "5 центов", years: ["2011"] },
-  { continent: "europe", countryKey: "europeanUnion", nominal: "10 центов", years: ["2000"] },
-  { continent: "europe", countryKey: "europeanUnion", nominal: "20 центов", years: ["2002"] },
-  { continent: "europe", countryKey: "europeanUnion", nominal: "50 центов", years: ["2002"] },
-  { continent: "europe", countryKey: "europeanUnion", nominal: "2 евро", years: ["2023"] },
+  coinLocalized("europe", "europeanUnion", localized("1 цент", "1 цент", "1 cent"), localized("1 цент", "1 цент", "1 cent"), ["2007"]),
+  coinLocalized("europe", "europeanUnion", localized("50 цент Берлин", "50 цент Берлин", "50 cents Berlin"), localized("50 цент", "50 цент", "50 cents"), ["2002"]),
+  coinLocalized("europe", "europeanUnion", localized("1 евро Да Винчи", "1 еуро Да Винчи", "1 euro Da Vinci"), localized("1 евро", "1 еуро", "1 euro"), ["2002"]),
+  coinLocalized("europe", "europeanUnion", localized("1 евро Моцарт", "1 еуро Моцарт", "1 euro Mozart"), localized("1 евро", "1 еуро", "1 euro"), ["2002"]),
+  coinLocalized("europe", "europeanUnion", localized("20 цент / 20 лепта", "20 цент / 20 лепта", "20 cents / 20 lepta"), localized("20 цент", "20 цент", "20 cents"), ["2002"]),
+  coinLocalized("europe", "europeanUnion", localized("10 цент", "10 цент", "10 cents"), localized("10 цент", "10 цент", "10 cents"), ["2004"]),
+  coinLocalized("europe", "europeanUnion", localized("5 цент Рим", "5 цент Рим", "5 cents Rome"), localized("5 цент", "5 цент", "5 cents"), ["2011"]),
+  coinLocalized("europe", "europeanUnion", localized("2 евро Данте Алигьери", "2 еуро Данте Алигьери", "2 euros Dante Alighieri"), localized("2 евро", "2 еуро", "2 euros"), ["2023"]),
+  coinLocalized("europe", "europeanUnion", localized("2 цент Марианна", "2 цент Марианна", "2 cents Marianne"), localized("2 цент", "2 цент", "2 cents"), ["2012"]),
   { continent: "europe", countryKey: "iceland", nominal: "10 аурар", years: ["1981"] },
   { continent: "europe", countryKey: "spain", nominal: "1 песета", years: ["1963"] },
   { continent: "europe", countryKey: "spain", nominal: "25 песет", years: ["1994"] },
@@ -411,11 +603,14 @@ const coinSeeds: CoinSeed[] = [
   { continent: "europe", countryKey: "poland", nominal: "10 грошей", years: ["2017"] },
   { continent: "europe", countryKey: "poland", nominal: "20 грошей", years: ["2018", "1965"] },
   { continent: "europe", countryKey: "portugal", nominal: "25 эскудо", years: ["1978"] },
+  coinLocalized("europe", "romania", localized("100 лей", "100 лей", "100 lei"), localized("100 лей", "100 лей", "100 lei"), ["1943"]),
   { continent: "europe", countryKey: "russia", nominal: "50 рублей", years: ["1993"] },
   { continent: "europe", countryKey: "russia", nominal: "10 рублей", years: ["1992", "2005", "2011", "2013", "2022"] },
-  { continent: "europe", countryKey: "russia", nominal: "5 рублей", years: ["1992"] },
+  { continent: "europe", countryKey: "russia", nominal: "5 рублей", years: ["1992", "1998", "2020"] },
   { continent: "europe", countryKey: "russia", nominal: "20 рублей", years: ["1992"] },
-  { continent: "europe", countryKey: "russia", nominal: "25 рублей", years: ["2011", "2018"] },
+  coinLocalized("europe", "russia", localized("25 рублей Олимпиада в Сочи", "25 рубль Сочи Олимпиадасы", "25 rubles Sochi Olympics"), localized("25 рублей", "25 рубль", "25 rubles"), ["2011"]),
+  coinLocalized("europe", "russia", localized("25 рублей ЧМ по футболу", "25 рубль футболдан әлем чемпионаты", "25 rubles FIFA World Cup"), localized("25 рублей", "25 рубль", "25 rubles"), ["2018"]),
+  coinLocalized("europe", "russia", localized("10 рублей Выборг", "10 рубль Выборг", "10 rubles Vyborg"), localized("10 рублей", "10 рубль", "10 rubles"), ["2014"]),
   { continent: "europe", countryKey: "russia", nominal: "5 копеек", years: ["1998"] },
   { continent: "europe", countryKey: "russia", nominal: "50 копеек", years: ["2010"] },
   { continent: "europe", countryKey: "russia", nominal: "1 рубль", years: ["1998"] },
@@ -470,12 +665,21 @@ const coinSeeds: CoinSeed[] = [
   { group: "historicalStates", historicalEntityKey: "ussr", nominal: "2 копейки", years: ["1926"] },
   { group: "historicalStates", historicalEntityKey: "ussr", nominal: "3 копейки", years: ["1928", "1987"] },
   { group: "historicalStates", historicalEntityKey: "ussr", nominal: "5 копеек", years: ["1930", "1984"] },
-  { group: "historicalStates", historicalEntityKey: "ussr", nominal: "10 копеек", years: ["1933", "1953", "1961", "1983"] },
+  { group: "historicalStates", historicalEntityKey: "ussr", nominal: "10 копеек", years: ["1933", "1953", "1961", "1983", "1985"] },
   { group: "historicalStates", historicalEntityKey: "ussr", nominal: "15 копеек", years: ["1931", "1946", "1981", "1991"] },
   { group: "historicalStates", historicalEntityKey: "ussr", nominal: "20 копеек", years: ["1932", "1936", "1981"] },
   { group: "historicalStates", historicalEntityKey: "ussr", nominal: "1 рубль Ленин", years: ["1970"] },
   { group: "historicalStates", historicalEntityKey: "ussr", nominal: "1 рубль ХХ", years: ["1965", "1991"] },
+  historicalCoinLocalized("ussr", localized("30 лет Победы — 1 рубль", "Жеңіске 30 жыл — 1 рубль", "30 years of Victory — 1 ruble"), localized("1 рубль", "1 рубль", "1 ruble"), ["1975"]),
+  historicalCoinLocalized("ussr", localized("40 лет Победы — 1 рубль", "Жеңіске 40 жыл — 1 рубль", "40 years of Victory — 1 ruble"), localized("1 рубль", "1 рубль", "1 ruble"), ["1985"]),
+  historicalCoinLocalized("ussr", localized("50 лет советской власти — 1 рубль", "Кеңес өкіметіне 50 жыл — 1 рубль", "50 years of Soviet power — 1 ruble"), localized("1 рубль", "1 рубль", "1 ruble"), ["1972"]),
+  historicalCoinLocalized("ussr", localized("70 лет Октябрю — 3 рубля", "Қазан төңкерісіне 70 жыл — 3 рубль", "70 years of October — 3 rubles"), localized("3 рубля", "3 рубль", "3 rubles"), ["1987"]),
+  historicalCoinLocalized("ussr", localized("Алишер Навои — 1 рубль", "Әлішер Науаи — 1 рубль", "Alisher Navoi — 1 ruble"), localized("1 рубль", "1 рубль", "1 ruble"), ["1991"]),
+  historicalCoinLocalized("ussr", localized("10 рублей", "10 рубль", "10 rubles"), localized("10 рублей", "10 рубль", "10 rubles"), ["1991"]),
+  historicalCoinLocalized("ussr", localized("15 рублей", "15 рубль", "15 rubles"), localized("15 рублей", "15 рубль", "15 rubles"), ["1981"]),
+  historicalCoinLocalized("ussr", localized("20 рублей", "20 рубль", "20 rubles"), localized("20 рублей", "20 рубль", "20 rubles"), ["1981"]),
   { group: "historicalStates", historicalEntityKey: "thirdReich", nominal: "1 пфенниг", years: ["1939"] },
+  historicalCoinLocalized("thirdReich", localized("5 рейхсмарок", "5 рейхсмарка", "5 reichsmarks"), localized("5 рейхсмарок", "5 рейхсмарка", "5 reichsmarks"), ["1935"]),
   { group: "historicalStates", historicalEntityKey: "westEastGermany", nominal: "1 марка", years: ["1971"] },
   { group: "historicalStates", historicalEntityKey: "westEastGermany", nominal: "2 марки", years: ["1974"] },
   { group: "historicalStates", historicalEntityKey: "westEastGermany", nominal: "1 пфенниг", years: ["1988"] },
@@ -498,6 +702,7 @@ const coinSeeds: CoinSeed[] = [
   { continent: "northAmerica", countryKey: "unitedStates", nominal: "5 центов", years: ["1964"] },
   { continent: "northAmerica", countryKey: "unitedStates", nominal: "10 центов", years: ["1983"] },
   { continent: "northAmerica", countryKey: "unitedStates", nominal: "1 цент", years: ["1994"] },
+  coinLocalized("northAmerica", "unitedStates", localized("1/2 доллара Кеннеди", "1/2 доллар Кеннеди", "1/2 dollar Kennedy"), localized("1/2 доллара", "1/2 доллар", "1/2 dollar"), ["1970"]),
   {
     continent: "northAmerica",
     nominal: "1 Восточно-Карибский цент",
@@ -895,6 +1100,7 @@ export const collection: CollectionItem[] = moneySeeds.flatMap((seed, seedIndex)
       category,
       collectionGroup: group,
       continent: seed.continent,
+      coinGroup: seed.coinGroup,
       countryKey: seed.countryKey,
       countryCode,
       relatedCountries: seed.relatedCountries,

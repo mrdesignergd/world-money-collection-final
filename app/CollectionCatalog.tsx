@@ -5,6 +5,7 @@ import type {
   CollectionGroup,
   CollectionItem,
   Continent,
+  KazakhstanCoinGroup,
 } from "../data/collection";
 import {
   blisterThemes,
@@ -30,8 +31,20 @@ type CatalogConfig = {
 };
 
 type CatalogOption = Continent | CollectionGroup | string;
+type CoinSpecialCategory = "kazakhstanCoins";
 
 const moneyOptions: readonly CatalogOption[] = [...continents, ...collectionGroups];
+const coinOptions: readonly CatalogOption[] = [...continents, "kazakhstanCoins", ...collectionGroups];
+const kazakhstanCoinGroups: readonly KazakhstanCoinGroup[] = [
+  "kazakhstanHistoricalFigures",
+  "kazakhstanAnniversaryDates",
+  "kazakhstanHistory",
+  "kazakhstanTraditions",
+  "kazakhstanSevenTreasures",
+  "kazakhstanSakaStyle",
+  "kazakhstanCities",
+  "kazakhstanCirculation",
+];
 
 const catalogConfigs: CatalogConfig[] = [
   {
@@ -48,7 +61,7 @@ const catalogConfigs: CatalogConfig[] = [
     titleKey: "coinsByContinent",
     eyebrowKey: "coins",
     descriptionKey: "coinDescription",
-    options: moneyOptions,
+    options: coinOptions,
   },
   {
     category: "blister",
@@ -317,9 +330,25 @@ function isCollectionGroup(option: string): option is CollectionGroup {
   return option === "specialTerritories" || option === "historicalStates";
 }
 
+function isCoinSpecialCategory(option: string): option is CoinSpecialCategory {
+  return option === "kazakhstanCoins";
+}
+
+function isKazakhstanCoinGroup(option: string): option is KazakhstanCoinGroup {
+  return kazakhstanCoinGroups.includes(option as KazakhstanCoinGroup);
+}
+
 function optionLabel(option: string, category: CatalogConfig["category"], language: Language) {
   if (category === "blister") {
     return translations.blisterTheme[option as keyof typeof translations.blisterTheme][language];
+  }
+
+  if (category === "coin" && isCoinSpecialCategory(option)) {
+    return translations.coinSpecialCategory[option][language];
+  }
+
+  if (category === "coin" && isKazakhstanCoinGroup(option)) {
+    return translations.kazakhstanCoinGroup[option][language];
   }
 
   if (isCollectionGroup(option)) {
@@ -332,6 +361,8 @@ function optionLabel(option: string, category: CatalogConfig["category"], langua
 function optionMatches(item: CollectionItem, option: string) {
   if (item.category === "blister") return item.theme === option;
   const group = item.collectionGroup ?? "regular";
+  if (item.category === "coin" && isKazakhstanCoinGroup(option)) return item.coinGroup === option;
+  if (item.category === "coin" && isCoinSpecialCategory(option)) return item.countryKey === "kazakhstan";
   if (isCollectionGroup(option)) return group === option;
   return group === "regular" && item.continent === option;
 }
@@ -355,6 +386,14 @@ function catalogTitle(
     return translations.collectionGroup[selected][language];
   }
 
+  if (category === "coin" && isCoinSpecialCategory(selected)) {
+    return translations.coinSpecialCategory[selected][language];
+  }
+
+  if (category === "coin" && isKazakhstanCoinGroup(selected)) {
+    return translations.kazakhstanCoinGroup[selected][language];
+  }
+
   const continent = selected as Continent;
   return category === "coin"
     ? translations.coinCatalogTitle[continent][language]
@@ -368,6 +407,10 @@ function localizedOption(item: CollectionItem, language: Language) {
 
   if (item.collectionGroup !== "regular") {
     return translations.collectionGroup[item.collectionGroup][language];
+  }
+
+  if (item.category === "coin" && item.coinGroup) {
+    return translations.kazakhstanCoinGroup[item.coinGroup][language];
   }
 
   if (!item.continent) return "";
@@ -398,9 +441,11 @@ function searchableText(item: CollectionItem, language: Language) {
   }
 
   const scope =
-    item.collectionGroup === "regular" && item.continent
-      ? translations.continent[item.continent][language]
-      : translations.collectionGroup[item.collectionGroup][language];
+    item.category === "coin" && item.coinGroup
+      ? translations.kazakhstanCoinGroup[item.coinGroup][language]
+      : item.collectionGroup === "regular" && item.continent
+        ? translations.continent[item.continent][language]
+        : translations.collectionGroup[item.collectionGroup][language];
 
   return [...common, scope]
     .join(" ")
@@ -428,6 +473,9 @@ function globalSearchableText(item: CollectionItem) {
     if (item.category === "blister") {
       values.push(translations.blisterTheme[item.theme][language]);
     } else {
+      if (item.category === "coin" && item.coinGroup) {
+        values.push(translations.kazakhstanCoinGroup[item.coinGroup][language]);
+      }
       if (item.continent) values.push(translations.continent[item.continent][language]);
       values.push(translations.collectionGroup[item.collectionGroup ?? "regular"][language]);
     }
@@ -664,11 +712,11 @@ function ItemCard({
       <p className="mt-4 leading-7 text-[#efe8d0]/72">
         {item.description[language]}
       </p>
-      {item.tags[language].length > 0 && (
+      {Array.from(new Set(item.tags[language])).length > 0 && (
         <div className="mt-5 flex flex-wrap gap-2">
-          {item.tags[language].map((tag) => (
+          {Array.from(new Set(item.tags[language])).map((tag, index) => (
             <span
-              key={tag}
+              key={`${tag}-${index}`}
               className="rounded-full bg-[#101311]/45 px-3 py-1 text-xs text-[#efe8d0]/72"
             >
               #{tag}
@@ -821,11 +869,11 @@ function DetailView({
               {item.description[language]}
             </p>
 
-            {item.tags[language].length > 0 && (
+            {Array.from(new Set(item.tags[language])).length > 0 && (
               <div className="mt-6 flex flex-wrap gap-2">
-                {item.tags[language].map((tag) => (
+                {Array.from(new Set(item.tags[language])).map((tag, index) => (
                   <span
-                    key={tag}
+                    key={`${tag}-${index}`}
                     className="rounded-full bg-[#efe8d0]/10 px-3 py-1 text-xs text-[#efe8d0]/76"
                   >
                     #{tag}
@@ -1244,58 +1292,78 @@ function CatalogSection({
             </button>
           </div>
 
-          <div className="mt-6 grid gap-3 md:grid-cols-[1fr_16rem]">
-            <input
-              key={`${selected}-${searchResetKey}`}
-              value={search}
-              onChange={(event) => {
-                setSearch(event.target.value);
-                setSelectedItemId(null);
-              }}
-              aria-label={translations.catalog.search[language]}
-              placeholder={translations.catalog.searchPlaceholder[language]}
-              className="min-w-0 rounded-full border border-[#d8b45f]/20 bg-[#173d2d] px-5 py-4 text-white outline-none transition placeholder:text-[#efe8d0]/45 focus:border-[#d8b45f]/70"
-            />
-            <select
-              value={sort}
-              onChange={(event) => setSort(event.target.value as SortMode)}
-              aria-label={translations.catalog.sort[language]}
-              className="rounded-full border border-[#d8b45f]/20 bg-[#173d2d] px-5 py-4 text-white outline-none transition focus:border-[#d8b45f]/70"
-            >
-              <option value="alpha">
-                {config.category === "blister"
-                  ? translations.catalog.alpha[language]
-                  : translations.catalog.alphaCountry[language]}
-              </option>
-              <option value="newest">{translations.catalog.newest[language]}</option>
-            </select>
-          </div>
-
-          <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {filtered.length > 0 ? (
-              filtered.map((item) => (
-                <ItemCard
-                  key={item.id}
-                  item={item}
-                  language={language}
-                  isSelected={item.id === selectedItemId}
-                  onSelect={() => openItem(item.id)}
+          {config.category === "coin" && isCoinSpecialCategory(selected) ? (
+            <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {kazakhstanCoinGroups.map((option) => (
+                <button
+                  key={option}
+                  type="button"
+                  onClick={() => openOption(option)}
+                  className="rounded-lg border border-[#d8b45f]/22 bg-[#173d2d] p-5 text-left text-white opacity-100 shadow-[0_12px_32px_rgba(0,0,0,0.16)] transition hover:-translate-y-1 hover:border-[#d8b45f]/55 hover:bg-[#1c4c36]"
+                >
+                  <h3 className="text-2xl font-black">
+                    {optionLabel(option, config.category, language)}
+                  </h3>
+                  <p className="mt-4 h-1 w-12 rounded-full bg-[#d8b45f]/55 transition" />
+                </button>
+              ))}
+            </div>
+          ) : (
+            <>
+              <div className="mt-6 grid gap-3 md:grid-cols-[1fr_16rem]">
+                <input
+                  key={`${selected}-${searchResetKey}`}
+                  value={search}
+                  onChange={(event) => {
+                    setSearch(event.target.value);
+                    setSelectedItemId(null);
+                  }}
+                  aria-label={translations.catalog.search[language]}
+                  placeholder={translations.catalog.searchPlaceholder[language]}
+                  className="min-w-0 rounded-full border border-[#d8b45f]/20 bg-[#173d2d] px-5 py-4 text-white outline-none transition placeholder:text-[#efe8d0]/45 focus:border-[#d8b45f]/70"
                 />
-              ))
-            ) : (
-              <div className="sm:col-span-2 lg:col-span-3">
-                <EmptyState
-                  search={search}
-                  language={language}
-                  message={
-                    !search && config.category === "banknote"
-                      ? translations.catalog.banknotesSoon[language]
-                      : undefined
-                  }
-                />
+                <select
+                  value={sort}
+                  onChange={(event) => setSort(event.target.value as SortMode)}
+                  aria-label={translations.catalog.sort[language]}
+                  className="rounded-full border border-[#d8b45f]/20 bg-[#173d2d] px-5 py-4 text-white outline-none transition focus:border-[#d8b45f]/70"
+                >
+                  <option value="alpha">
+                    {config.category === "blister"
+                      ? translations.catalog.alpha[language]
+                      : translations.catalog.alphaCountry[language]}
+                  </option>
+                  <option value="newest">{translations.catalog.newest[language]}</option>
+                </select>
               </div>
-            )}
-          </div>
+
+              <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {filtered.length > 0 ? (
+                  filtered.map((item) => (
+                    <ItemCard
+                      key={item.id}
+                      item={item}
+                      language={language}
+                      isSelected={item.id === selectedItemId}
+                      onSelect={() => openItem(item.id)}
+                    />
+                  ))
+                ) : (
+                  <div className="sm:col-span-2 lg:col-span-3">
+                    <EmptyState
+                      search={search}
+                      language={language}
+                      message={
+                        !search && config.category === "banknote"
+                          ? translations.catalog.banknotesSoon[language]
+                          : undefined
+                      }
+                    />
+                  </div>
+                )}
+              </div>
+            </>
+          )}
         </div>
       )}
 

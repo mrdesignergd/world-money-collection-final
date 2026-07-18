@@ -32,8 +32,9 @@ type CatalogConfig = {
 
 type CatalogOption = Continent | CollectionGroup | string;
 type CoinSpecialCategory = "kazakhstanCoins";
+type BanknoteSpecialCategory = "kazakhstanBanknotes";
 
-const moneyOptions: readonly CatalogOption[] = [...continents, ...collectionGroups];
+const banknoteOptions: readonly CatalogOption[] = [...continents, "kazakhstanBanknotes", ...collectionGroups];
 const coinOptions: readonly CatalogOption[] = [...continents, "kazakhstanCoins", ...collectionGroups];
 const kazakhstanCoinGroups: readonly KazakhstanCoinGroup[] = [
   "kazakhstanHistoricalFigures",
@@ -53,7 +54,7 @@ const catalogConfigs: CatalogConfig[] = [
     titleKey: "banknotesByContinent",
     eyebrowKey: "banknotes",
     descriptionKey: "banknoteDescription",
-    options: moneyOptions,
+    options: banknoteOptions,
   },
   {
     category: "coin",
@@ -334,6 +335,10 @@ function isCoinSpecialCategory(option: string): option is CoinSpecialCategory {
   return option === "kazakhstanCoins";
 }
 
+function isBanknoteSpecialCategory(option: string): option is BanknoteSpecialCategory {
+  return option === "kazakhstanBanknotes";
+}
+
 function isKazakhstanCoinGroup(option: string): option is KazakhstanCoinGroup {
   return kazakhstanCoinGroups.includes(option as KazakhstanCoinGroup);
 }
@@ -345,6 +350,10 @@ function optionLabel(option: string, category: CatalogConfig["category"], langua
 
   if (category === "coin" && isCoinSpecialCategory(option)) {
     return translations.coinSpecialCategory[option][language];
+  }
+
+  if (category === "banknote" && isBanknoteSpecialCategory(option)) {
+    return countries.kazakhstan[language];
   }
 
   if (category === "coin" && isKazakhstanCoinGroup(option)) {
@@ -363,7 +372,9 @@ function optionMatches(item: CollectionItem, option: string) {
   const group = item.collectionGroup ?? "regular";
   if (item.category === "coin" && isKazakhstanCoinGroup(option)) return item.coinGroup === option;
   if (item.category === "coin" && isCoinSpecialCategory(option)) return item.countryKey === "kazakhstan";
+  if (item.category === "banknote" && isBanknoteSpecialCategory(option)) return item.countryKey === "kazakhstan";
   if (isCollectionGroup(option)) return group === option;
+  if (item.category === "banknote" && item.countryKey === "kazakhstan") return false;
   return group === "regular" && item.continent === option;
 }
 
@@ -390,6 +401,10 @@ function catalogTitle(
     return translations.coinSpecialCategory[selected][language];
   }
 
+  if (category === "banknote" && isBanknoteSpecialCategory(selected)) {
+    return countries.kazakhstan[language];
+  }
+
   if (category === "coin" && isKazakhstanCoinGroup(selected)) {
     return translations.kazakhstanCoinGroup[selected][language];
   }
@@ -411,6 +426,10 @@ function localizedOption(item: CollectionItem, language: Language) {
 
   if (item.category === "coin" && item.coinGroup) {
     return translations.kazakhstanCoinGroup[item.coinGroup][language];
+  }
+
+  if (item.category === "banknote" && item.countryKey === "kazakhstan") {
+    return countries.kazakhstan[language];
   }
 
   if (!item.continent) return "";

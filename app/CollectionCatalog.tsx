@@ -468,6 +468,15 @@ function sortItems(items: CollectionItem[], sort: SortMode, language: Language) 
   });
 }
 
+function imageAspectClass(item: CollectionItem, large: boolean) {
+  if (item.category === "banknote") return "aspect-[16/9]";
+  return large ? "aspect-square min-h-64 sm:min-h-80" : "aspect-[4/3]";
+}
+
+function imageFitClass(item: CollectionItem) {
+  return item.category === "banknote" ? "object-contain bg-[#101311]/55" : "object-cover";
+}
+
 function Placeholder({
   item,
   language,
@@ -482,8 +491,8 @@ function Placeholder({
   return (
     <div
       className={`relative isolate min-w-0 overflow-hidden rounded-md border border-[#d8b45f]/18 bg-[linear-gradient(135deg,rgba(216,180,95,0.24),rgba(248,245,234,0.08),rgba(16,19,17,0.35))] ${
-        large ? "min-h-64 sm:min-h-80" : ""
-      } ${large ? "aspect-square" : "aspect-[4/3]"}`}
+        imageAspectClass(item, large)
+      }`}
     >
       <div className="absolute inset-0 z-10 flex h-full w-full flex-col items-center justify-center px-4 text-center">
         <div
@@ -530,8 +539,10 @@ function ItemImage({
       <img
         src={src}
         alt={label ? `${item.title[language]} — ${label}` : item.title[language]}
-        className={`block w-full rounded-md border border-[#d8b45f]/18 object-cover ${
-          large ? "aspect-square min-h-64 sm:min-h-80" : "aspect-[4/3]"
+        className={`block w-full rounded-md border border-[#d8b45f]/18 ${
+          imageAspectClass(item, large)
+        } ${
+          imageFitClass(item)
         }`}
       />
       {label && (
@@ -979,12 +990,14 @@ function CatalogSection({
   language,
   onBackToCollection,
   resetSignal,
+  initialSelected,
 }: {
   config: CatalogConfig;
   items: CollectionItem[];
   language: Language;
   onBackToCollection: () => void;
   resetSignal: number;
+  initialSelected: string | null;
 }) {
   const [selected, setSelected] = useState<string | null>(null);
   const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
@@ -1041,12 +1054,13 @@ function CatalogSection({
   }, [activeItems, selectedItemId]);
 
   useEffect(() => {
-    setSelected(null);
+    setSelected(initialSelected);
     setSelectedItemId(null);
     setCategorySearch("");
     setSearch("");
     setSearchResetKey((current) => current + 1);
-  }, [resetSignal]);
+    scrollToSection();
+  }, [initialSelected, resetSignal]);
 
   useEffect(() => {
     if (!selectedItem || !detailViewRef.current) return;
@@ -1307,6 +1321,7 @@ export default function CollectionCatalog({
   language: Language;
 }) {
   const [activeCategory, setActiveCategory] = useState<CatalogConfig["category"] | null>(null);
+  const [initialSelected, setInitialSelected] = useState<string | null>(null);
   const [resetSignal, setResetSignal] = useState(0);
   const rootRef = useRef<HTMLDivElement | null>(null);
   const activeConfig = catalogConfigs.find((config) => config.category === activeCategory) ?? null;
@@ -1319,31 +1334,49 @@ export default function CollectionCatalog({
 
   const openCategory = (category: CatalogConfig["category"]) => {
     setActiveCategory(category);
+    setInitialSelected(null);
     setResetSignal((current) => current + 1);
     scrollToRoot();
   };
 
   const backToCollection = () => {
     setActiveCategory(null);
+    setInitialSelected(null);
     scrollToRoot();
   };
 
   useEffect(() => {
-    const openConfig = (hashConfig: CatalogConfig | undefined) => {
+    const parseCatalogHash = (hash: string) => {
+      const [anchor, selected] = hash.split(":");
+      const hashConfig = catalogConfigs.find((config) => config.anchor === anchor);
+      const hashSelected =
+        hashConfig && selected && hashConfig.options.includes(selected)
+          ? selected
+          : null;
+      return { hashConfig, hashSelected };
+    };
+
+    const openConfig = (hashConfig: CatalogConfig | undefined, hashSelected: string | null) => {
       if (hashConfig) {
         setActiveCategory(hashConfig.category);
+        setInitialSelected(hashSelected);
         setResetSignal((current) => current + 1);
       }
     };
+
     const openFromHash = () => {
       const hash = window.location.hash.replace("#", "");
-      openConfig(catalogConfigs.find((config) => config.anchor === hash));
+      const { hashConfig, hashSelected } = parseCatalogHash(hash);
+      openConfig(hashConfig, hashSelected);
     };
+
     const handleAnchorClick = (event: MouseEvent) => {
       if (!(event.target instanceof Element)) return;
       const link = event.target.closest("a[href^='#']");
       const href = link?.getAttribute("href")?.replace("#", "");
-      openConfig(catalogConfigs.find((config) => config.anchor === href));
+      if (!href) return;
+      const { hashConfig, hashSelected } = parseCatalogHash(href);
+      openConfig(hashConfig, hashSelected);
     };
 
     openFromHash();
@@ -1364,6 +1397,7 @@ export default function CollectionCatalog({
           language={language}
           onBackToCollection={backToCollection}
           resetSignal={resetSignal}
+          initialSelected={initialSelected}
         />
       </div>
     );

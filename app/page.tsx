@@ -193,14 +193,17 @@ export default function Home() {
     {
       value: coinCount,
       label: translations.stats.coins[language],
+      href: "#coins",
     },
     {
       value: banknoteCount,
       label: translations.stats.banknotes[language],
+      href: "#banknotes",
     },
     {
       value: blisterCount,
       label: translations.stats.blisters[language],
+      href: "#blisters",
     },
   ];
 
@@ -208,14 +211,17 @@ export default function Home() {
     {
       value: countryStatsByCategory.coin.countriesCount,
       label: translations.stats.countries[language],
+      href: "#coins",
     },
     {
       value: countryStatsByCategory.coin.specialTerritoriesCount,
       label: translations.stats.specialTerritories[language],
+      href: "#coins:specialTerritories",
     },
     {
       value: countryStatsByCategory.coin.historicalStatesCount,
       label: translations.stats.historicalStates[language],
+      href: "#coins:historicalStates",
     },
   ];
 
@@ -223,14 +229,17 @@ export default function Home() {
     {
       value: countryStatsByCategory.banknote.countriesCount,
       label: translations.stats.countries[language],
+      href: "#banknotes",
     },
     {
       value: countryStatsByCategory.banknote.specialTerritoriesCount,
       label: translations.stats.specialTerritories[language],
+      href: "#banknotes:specialTerritories",
     },
     {
       value: countryStatsByCategory.banknote.historicalStatesCount,
       label: translations.stats.historicalStates[language],
+      href: "#banknotes:historicalStates",
     },
   ];
 
@@ -377,11 +386,12 @@ export default function Home() {
           </p>
           <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
             {totalStats.map((item, index) => (
-              <div
+              <a
                 key={item.label}
+                href={item.href}
                 data-reveal
                 data-reveal-delay={index * 80}
-                className="rounded-lg border border-[#d8b45f]/18 bg-[#efe8d0]/7 p-4 transition hover:-translate-y-1 hover:border-[#d8b45f]/55 hover:bg-[#173d2d] sm:p-6"
+                className="block cursor-pointer rounded-lg border border-[#d8b45f]/18 bg-[#efe8d0]/7 p-4 transition hover:-translate-y-1 hover:border-[#d8b45f]/55 hover:bg-[#173d2d] focus:outline-none focus-visible:border-[#f2cf7d] focus-visible:ring-2 focus-visible:ring-[#d8b45f]/35 sm:p-6"
               >
                 <p className="text-3xl font-black text-[#f2cf7d] sm:text-4xl">
                   {item.value}
@@ -389,7 +399,7 @@ export default function Home() {
                 <p className="mt-2 text-xs uppercase tracking-[0.16em] text-[#efe8d0]/65 sm:text-sm sm:tracking-[0.2em]">
                   {item.label}
                 </p>
-              </div>
+              </a>
             ))}
           </div>
         </div>
@@ -407,11 +417,12 @@ export default function Home() {
               </h3>
               <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3">
                 {group.items.map((item, index) => (
-                  <div
+                  <a
                     key={`${group.title}-${item.label}`}
+                    href={item.href}
                     data-reveal
                     data-reveal-delay={300 + groupIndex * 120 + index * 70}
-                    className="rounded-lg border border-[#d8b45f]/18 bg-[#efe8d0]/7 p-4 transition hover:-translate-y-1 hover:border-[#d8b45f]/55 hover:bg-[#173d2d] sm:p-5"
+                    className="block cursor-pointer rounded-lg border border-[#d8b45f]/18 bg-[#efe8d0]/7 p-4 transition hover:-translate-y-1 hover:border-[#d8b45f]/55 hover:bg-[#173d2d] focus:outline-none focus-visible:border-[#f2cf7d] focus-visible:ring-2 focus-visible:ring-[#d8b45f]/35 sm:p-5"
                   >
                     <p className="text-3xl font-black text-[#f2cf7d]">
                       {item.value}
@@ -419,7 +430,7 @@ export default function Home() {
                     <p className="mt-2 text-xs uppercase tracking-[0.16em] text-[#efe8d0]/65">
                       {item.label}
                     </p>
-                  </div>
+                  </a>
                 ))}
               </div>
             </div>

@@ -302,6 +302,8 @@ type CoinSeed = {
   nominalText?: LocalizedText;
   description?: LocalizedText;
   tags?: LocalizedList;
+  imageFront?: string;
+  imageBack?: string;
   nominal: string;
   years: string[];
 };
@@ -549,7 +551,14 @@ const coinSeeds: CoinSeed[] = [
   { continent: "asia", countryKey: "japan", nominal: "10 йен", years: ["1955"] },
   { continent: "asia", countryKey: "japan", nominal: "1 йена", years: ["1977"] },
 
-  { continent: "europe", countryKey: "austria", nominal: "10 грошей", years: ["1972"] },
+  {
+    continent: "europe",
+    countryKey: "austria",
+    nominal: "10 грошей",
+    years: ["1972"],
+    imageFront: "/images/coins/austria/austria-10-groschen-1972-avers.jpg",
+    imageBack: "/images/coins/austria/austria-10-groschen-1972-revers.jpg",
+  },
   { continent: "europe", countryKey: "belarus", nominal: "1 рубль", years: ["2009"] },
   { continent: "europe", countryKey: "belarus", nominal: "1 копейка", years: ["2009"] },
   { continent: "europe", countryKey: "belgium", nominal: "20 франков", years: ["1981"] },
@@ -804,7 +813,11 @@ function sharedBanknote(
 const eastCaribbeanBanknote = localized("2 Восточно-Карибских доллара", "2 Шығыс Кариб доллары", "2 Eastern Caribbean dollars");
 
 const banknoteSeeds: CoinSeed[] = [
-  banknoteLocalized("europe", "belarus", localized("50 рублей", "50 рубль", "50 rubles"), ["2000"]),
+  {
+    ...banknoteLocalized("europe", "belarus", localized("50 рублей", "50 рубль", "50 rubles"), ["2000"]),
+    imageFront: "/images/banknotes/belarus/belarus-50-rubles-avers.jpg",
+    imageBack: "/images/banknotes/belarus/belarus-50-rubles-revers.jpg",
+  },
   banknoteLocalized("europe", "belarus", localized("100 рублей", "100 рубль", "100 rubles"), ["2000"]),
   banknote("europe", "bulgaria", "20 лева", ["1991"]),
   banknote("europe", "bosniaAndHerzegovina", "10 динар"),
@@ -1090,12 +1103,16 @@ function tagsFor(seed: CoinSeed): LocalizedList {
 type BlisterSeed = {
   theme: BlisterTheme;
   title: LocalizedText;
+  imageFront?: string;
+  imageBack?: string;
 };
 
-function blisterSeed(theme: BlisterTheme, ru: string, kz: string, en: string): BlisterSeed {
+function blisterSeed(theme: BlisterTheme, ru: string, kz: string, en: string, imageFront = "", imageBack = ""): BlisterSeed {
   return {
     theme,
     title: localized(ru, kz, en),
+    imageFront,
+    imageBack,
   };
 }
 
@@ -1161,7 +1178,14 @@ const blisterSeeds: BlisterSeed[] = [
   blisterSeed("figures", "Ильяс Жансугуров", "Ілияс Жансүгіров", "Ilyas Zhansugirov"),
   blisterSeed("figures", "Сакен Сейфуллин", "Сәкен Сейфуллин", "Saken Seifullin"),
   blisterSeed("figures", "Турар Рыскулов", "Тұрар Рысқұлов", "Turar Ryskulov"),
-  blisterSeed("figures", "Абай Кунанбаев", "Абай Құнанбайұлы", "Abai Qunanbaiuly"),
+  blisterSeed(
+    "figures",
+    "Абай Кунанбаев",
+    "Абай Құнанбайұлы",
+    "Abai Qunanbaiuly",
+    "/images/blisters/figures/abai-qunanbaiuly-blister-avers.jpg",
+    "/images/blisters/figures/abai-qunanbaiuly-blister-revers.png",
+  ),
   blisterSeed("figures", "Жубан Молдагалиев", "Жұбан Молдағалиев", "Zhuban Moldagaliyev"),
   blisterSeed("figures", "Жамбыл Жабаев", "Жамбыл Жабаев", "Zhambyl Zhabayev"),
   blisterSeed("figures", "Темирбек Жургенов", "Темірбек Жүргенов", "Temirbek Zhurgenov"),
@@ -1243,8 +1267,8 @@ const blisterItems: BlisterItem[] = blisterSeeds.map((seed, index) => ({
   title: seed.title,
   description: blisterDescription(seed),
   image: "",
-  imageFront: "",
-  imageBack: "",
+  imageFront: seed.imageFront ?? "",
+  imageBack: seed.imageBack ?? "",
   addedAt: "2026-07-19",
   updatedAt: "2026-07-19",
   tags: blisterTags(seed),
@@ -1274,8 +1298,8 @@ const moneyItems: MoneyItem[] = moneySeeds.flatMap((seed, seedIndex) =>
       year,
       description: seed.description ?? descriptionFor(seed),
       image: "",
-      imageFront: "",
-      imageBack: "",
+      imageFront: seed.imageFront ?? "",
+      imageBack: seed.imageBack ?? "",
       addedAt: "2026-07-10",
       updatedAt: "2026-07-10",
       tags: seed.tags ?? tagsFor(seed),

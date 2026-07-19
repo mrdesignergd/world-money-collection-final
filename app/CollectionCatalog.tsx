@@ -541,12 +541,12 @@ function imageAspectClass(item: CollectionItem, large: boolean) {
     return large ? "aspect-square min-h-64 sm:min-h-80" : "aspect-square";
   }
   if (item.category === "blister") return "aspect-[85/120]";
-  return large ? "aspect-square min-h-64 sm:min-h-80" : "aspect-[4/3]";
+  return large ? "aspect-square min-h-64 sm:min-h-80" : "aspect-square";
 }
 
 function imageFitClass(item: CollectionItem) {
-  return item.category === "banknote" || item.category === "blister"
-    ? "object-contain bg-[#101311]/55"
+  return item.category === "coin" || item.category === "banknote" || item.category === "blister"
+    ? "object-contain object-center bg-[#101311]/55"
     : "object-cover";
 }
 

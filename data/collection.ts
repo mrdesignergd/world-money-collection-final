@@ -21,12 +21,12 @@ export type Continent =
   | "oceania";
 
 export type BlisterTheme =
-  | "Известные личности"
-  | "Традиции"
-  | "Животные"
-  | "Спорт"
-  | "Знаменитые события"
-  | "Прочие";
+  | "figures"
+  | "traditions"
+  | "animals"
+  | "sport"
+  | "events"
+  | "blister-sets";
 
 export type CountryKey = string;
 
@@ -101,12 +101,12 @@ export const collectionGroups: CollectionGroup[] = [
 ];
 
 export const blisterThemes: BlisterTheme[] = [
-  "Известные личности",
-  "Традиции",
-  "Животные",
-  "Спорт",
-  "Знаменитые события",
-  "Прочие",
+  "figures",
+  "traditions",
+  "animals",
+  "sport",
+  "events",
+  "blister-sets",
 ];
 
 export const countries: Record<CountryKey, CountryInfo> = {
@@ -1087,7 +1087,170 @@ function tagsFor(seed: CoinSeed): LocalizedList {
   };
 }
 
-export const collection: CollectionItem[] = moneySeeds.flatMap((seed, seedIndex) =>
+type BlisterSeed = {
+  theme: BlisterTheme;
+  title: LocalizedText;
+};
+
+function blisterSeed(theme: BlisterTheme, ru: string, kz: string, en: string): BlisterSeed {
+  return {
+    theme,
+    title: localized(ru, kz, en),
+  };
+}
+
+function blisterDescription(seed: BlisterSeed): LocalizedText {
+  return {
+    ru: `Блистер из моей коллекции: ${seed.title.ru}.`,
+    kz: `Менің коллекциямдағы блистер: ${seed.title.kz}.`,
+    en: `A blister from my collection: ${seed.title.en}.`,
+  };
+}
+
+function blisterTags(seed: BlisterSeed): LocalizedList {
+  const theme = {
+    ru:
+      seed.theme === "figures"
+        ? "Известные личности"
+        : seed.theme === "traditions"
+          ? "Традиции"
+          : seed.theme === "animals"
+            ? "Животные"
+            : seed.theme === "sport"
+              ? "Спорт"
+              : seed.theme === "events"
+                ? "Знаменательные события"
+                : "Набор блистеров",
+    kz:
+      seed.theme === "figures"
+        ? "Танымал тұлғалар"
+        : seed.theme === "traditions"
+          ? "Дәстүрлер"
+          : seed.theme === "animals"
+            ? "Жануарлар"
+            : seed.theme === "sport"
+              ? "Спорт"
+              : seed.theme === "events"
+                ? "Атаулы оқиғалар"
+                : "Блистер жиынтықтары",
+    en:
+      seed.theme === "figures"
+        ? "Famous figures"
+        : seed.theme === "traditions"
+          ? "Traditions"
+          : seed.theme === "animals"
+            ? "Animals"
+            : seed.theme === "sport"
+              ? "Sport"
+              : seed.theme === "events"
+                ? "Notable events"
+                : "Blister sets",
+  };
+
+  return {
+    ru: [seed.title.ru, theme.ru, "блистер", "коллекция"],
+    kz: [seed.title.kz, theme.kz, "блистер", "жиынтық", "коллекция"],
+    en: [seed.title.en, theme.en, "blister", "collection"],
+  };
+}
+
+const blisterSeeds: BlisterSeed[] = [
+  blisterSeed("figures", "Абылай хан", "Абылай хан", "Abylai Khan"),
+  blisterSeed("figures", "Айша Галимбаева", "Айша Ғалымбаева", "Aisha Galimbayeva"),
+  blisterSeed("figures", "Бейимбет Майлин", "Бейімбет Майлин", "Beimbet Mailin"),
+  blisterSeed("figures", "Ильяс Жансугуров", "Ілияс Жансүгіров", "Ilyas Zhansugirov"),
+  blisterSeed("figures", "Сакен Сейфуллин", "Сәкен Сейфуллин", "Saken Seifullin"),
+  blisterSeed("figures", "Турар Рыскулов", "Тұрар Рысқұлов", "Turar Ryskulov"),
+  blisterSeed("figures", "Абай Кунанбаев", "Абай Құнанбайұлы", "Abai Qunanbaiuly"),
+  blisterSeed("figures", "Жубан Молдагалиев", "Жұбан Молдағалиев", "Zhuban Moldagaliyev"),
+  blisterSeed("figures", "Жамбыл Жабаев", "Жамбыл Жабаев", "Zhambyl Zhabayev"),
+  blisterSeed("figures", "Темирбек Жургенов", "Темірбек Жүргенов", "Temirbek Zhurgenov"),
+  blisterSeed("figures", "Каныш Сатпаев", "Қаныш Сәтбаев", "Kanysh Satbayev"),
+  blisterSeed("figures", "Кемел Акишев", "Кемел Ақышев", "Kemel Akishev"),
+  blisterSeed("figures", "Рахымжан Кошкарбаев", "Рақымжан Қошқарбаев", "Rakhimzhan Koshkarbayev"),
+  blisterSeed("figures", "Сагадат Нурмагамбетов", "Сағадат Нұрмағамбетов", "Sagadat Nurmagambetov"),
+  blisterSeed("figures", "Джучи хан", "Жошы хан", "Jochi Khan"),
+  blisterSeed("figures", "Евней Букетов", "Евней Бөкетов", "Evnei Buketov"),
+  blisterSeed("figures", "Алия Молдагулова", "Әлия Молдағұлова", "Aliya Moldagulova"),
+  blisterSeed("figures", "Ермек Серкебаев", "Ермек Серкебаев", "Yermek Serkebayev"),
+  blisterSeed("figures", "Кажымукан", "Қажымұқан", "Kazhymukan"),
+  blisterSeed("figures", "Роза Багланова", "Роза Бағланова", "Roza Baglanova"),
+  blisterSeed("figures", "Ахмет Байтурсынов", "Ахмет Байтұрсынұлы", "Akhmet Baitursynuly"),
+  blisterSeed("figures", "Талгат Бегельдинов", "Талғат Бигелдинов", "Talgat Bigeldinov"),
+  blisterSeed("figures", "Мухтар Ауэзов", "Мұхтар Әуезов", "Mukhtar Auezov"),
+  blisterSeed("figures", "Маншук Маметова", "Мәншүк Мәметова", "Manshuk Mametova"),
+
+  blisterSeed("traditions", "Сүйінші", "Сүйінші", "Suyinshi"),
+  blisterSeed("traditions", "Кыз узату", "Қыз ұзату", "Kyz uzatu"),
+  blisterSeed("traditions", "Сундет той", "Сүндет той", "Sundet toi"),
+  blisterSeed("traditions", "Тилашар", "Тілашар", "Tilashar"),
+  blisterSeed("traditions", "Жар-жар", "Жар-жар", "Zhar-zhar"),
+  blisterSeed("traditions", "Ерулик", "Ерулік", "Erulik"),
+  blisterSeed("traditions", "Айналайын", "Айналайын", "Ainalayin"),
+
+  blisterSeed("animals", "Соболь", "Бұлғын", "Sable"),
+  blisterSeed("animals", "Кокбори", "Көкбөрі", "Kokbori"),
+  blisterSeed("animals", "Филин", "Үкі", "Eagle owl"),
+  blisterSeed("animals", "Бабочка", "Көбелек", "Butterfly"),
+  blisterSeed("animals", "Олень", "Бұғы", "Deer"),
+  blisterSeed("animals", "Кулан", "Құлан", "Kulan"),
+  blisterSeed("animals", "Лебедь", "Аққу", "Swan"),
+  blisterSeed("animals", "Беркут", "Бүркіт", "Golden eagle"),
+  blisterSeed("animals", "Балхашский окунь", "Балқаш алабұғасы", "Balkhash perch"),
+  blisterSeed("animals", "Келоағлан", "Келоағлан", "Keloaglan"),
+  blisterSeed("animals", "Верблюд", "Түйе", "Camel"),
+  blisterSeed("animals", "Медведь", "Аю", "Bear"),
+  blisterSeed("animals", "Белая кувшинка", "Ақтұңғиық", "White water lily"),
+  blisterSeed("animals", "Аргамак", "Арғымақ", "Argamak horse"),
+
+  blisterSeed("sport", "Тогызкумалак", "Тоғызқұмалақ", "Togyzkumalak"),
+  blisterSeed("sport", "Казахская борьба", "Қазақ күресі", "Kazakh kures"),
+  blisterSeed("sport", "Кайрат (Алматы)", "Қайрат (Алматы)", "Kairat (Almaty)"),
+  blisterSeed("sport", "Астана (Астана)", "Астана (Астана)", "Astana (Astana)"),
+  blisterSeed("sport", "Актобе (Актобе)", "Ақтөбе (Ақтөбе)", "Aktobe (Aktobe)"),
+  blisterSeed("sport", "Ордабасы (Шымкент)", "Ордабасы (Шымкент)", "Ordabasy (Shymkent)"),
+  blisterSeed("sport", "Тобол (Костанай)", "Тобыл (Қостанай)", "Tobol (Kostanay)"),
+  blisterSeed("sport", "Елимай (Семей)", "Елімай (Семей)", "Elimai (Semey)"),
+  blisterSeed("sport", "Кайсар (Кызылорда)", "Қайсар (Қызылорда)", "Kaisar (Kyzylorda)"),
+  blisterSeed("sport", "Жетысу (Талдыкорган)", "Жетісу (Талдықорған)", "Zhetysu (Taldykorgan)"),
+  blisterSeed("sport", "Атырау (Атырау)", "Атырау (Атырау)", "Atyrau (Atyrau)"),
+  blisterSeed("sport", "Женис (Астана)", "Жеңіс (Астана)", "Zhenis (Astana)"),
+  blisterSeed("sport", "Туран (Туркестан)", "Тұран (Түркістан)", "Turan (Turkistan)"),
+  blisterSeed("sport", "Шахтер (Караганда)", "Шахтер (Қарағанды)", "Shakhter (Karaganda)"),
+  blisterSeed("sport", "Кызылжар (Петропавловск)", "Қызылжар (Петропавл)", "Kyzylzhar (Petropavl)"),
+
+  blisterSeed("events", "20 лет Астане", "Астанаға 20 жыл", "20 years of Astana"),
+  blisterSeed("events", "25 лет тенге", "Теңгеге 25 жыл", "25 years of the tenge"),
+  blisterSeed("events", "25 лет Астане", "Астанаға 25 жыл", "25 years of Astana"),
+  blisterSeed("events", "Картина мира", "Әлем бейнесі", "Picture of the World"),
+
+  blisterSeed("blister-sets", "Сакский стиль", "Сақ стилі", "Saka style"),
+  blisterSeed(
+    "blister-sets",
+    "Сувенирный блистерный набор оборотных монет",
+    "Айналыстағы монеталардың кәдесый блистер жиынтығы",
+    "Souvenir blister set of circulation coins",
+  ),
+  blisterSeed("blister-sets", "JETI QAZYNA", "JETI QAZYNA", "JETI QAZYNA"),
+  blisterSeed("blister-sets", "Футбольные команды Казахстана", "Қазақстанның футбол командалары", "Football teams of Kazakhstan"),
+];
+
+const blisterItems: BlisterItem[] = blisterSeeds.map((seed, index) => ({
+  id: `blister-${seed.theme}-${slug(seed.title.en)}-${index + 1}`,
+  category: "blister",
+  collectionGroup: "regular",
+  theme: seed.theme,
+  title: seed.title,
+  description: blisterDescription(seed),
+  image: "",
+  imageFront: "",
+  imageBack: "",
+  addedAt: "2026-07-19",
+  updatedAt: "2026-07-19",
+  tags: blisterTags(seed),
+}));
+
+const moneyItems: MoneyItem[] = moneySeeds.flatMap((seed, seedIndex) =>
   seed.years.map((year, yearIndex) => {
     const category = seed.category ?? "coin";
     const group = seed.group ?? "regular";
@@ -1119,3 +1282,5 @@ export const collection: CollectionItem[] = moneySeeds.flatMap((seed, seedIndex)
     } satisfies MoneyItem;
   }),
 );
+
+export const collection: CollectionItem[] = [...moneyItems, ...blisterItems];

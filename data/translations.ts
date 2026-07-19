@@ -452,20 +452,12 @@ export const translations = {
     oceania: { ru: "Банкноты Океании", kz: "Океания банкноттары", en: "Banknotes of Oceania" },
   } satisfies Record<Continent, LocalizedText>,
   blisterTheme: {
-    "Известные личности": {
-      ru: "Известные личности",
-      kz: "Танымал тұлғалар",
-      en: "Famous People",
-    },
-    Традиции: { ru: "Традиции", kz: "Дәстүрлер", en: "Traditions" },
-    Животные: { ru: "Животные", kz: "Жануарлар", en: "Animals" },
-    Спорт: { ru: "Спорт", kz: "Спорт", en: "Sport" },
-    "Знаменитые события": {
-      ru: "Знаменитые события",
-      kz: "Белгілі оқиғалар",
-      en: "Famous Events",
-    },
-    Прочие: { ru: "Прочие", kz: "Басқалар", en: "Other" },
+    figures: { ru: "Известные личности", kz: "Танымал тұлғалар", en: "Famous figures" },
+    traditions: { ru: "Традиции", kz: "Дәстүрлер", en: "Traditions" },
+    animals: { ru: "Животные", kz: "Жануарлар", en: "Animals" },
+    sport: { ru: "Спорт", kz: "Спорт", en: "Sport" },
+    events: { ru: "Знаменательные события", kz: "Атаулы оқиғалар", en: "Notable events" },
+    "blister-sets": { ru: "Набор блистеров", kz: "Блистер жиынтықтары", en: "Blister sets" },
   } satisfies Record<BlisterTheme, LocalizedText>,
   facts: {
     eyebrow: {

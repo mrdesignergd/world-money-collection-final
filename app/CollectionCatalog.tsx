@@ -537,11 +537,17 @@ function sortItems(items: CollectionItem[], sort: SortMode, language: Language) 
 
 function imageAspectClass(item: CollectionItem, large: boolean) {
   if (item.category === "banknote") return "aspect-[16/9]";
+  if (item.category === "blister" && item.theme === "blister-sets") {
+    return large ? "aspect-square min-h-64 sm:min-h-80" : "aspect-square";
+  }
+  if (item.category === "blister") return "aspect-[85/120]";
   return large ? "aspect-square min-h-64 sm:min-h-80" : "aspect-[4/3]";
 }
 
 function imageFitClass(item: CollectionItem) {
-  return item.category === "banknote" ? "object-contain bg-[#101311]/55" : "object-cover";
+  return item.category === "banknote" || item.category === "blister"
+    ? "object-contain bg-[#101311]/55"
+    : "object-cover";
 }
 
 function Placeholder({

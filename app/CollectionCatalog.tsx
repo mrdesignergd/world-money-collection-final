@@ -682,7 +682,7 @@ function ItemCard({
   onSelect: () => void;
 }) {
   const meta = localizedOption(item, language);
-  const previewImage = item.imageFront || item.image;
+  const previewImage = item.previewImage || item.imageFront || item.image;
   const country = displayCountry(item, language);
   const code = displayCountryCode(item);
 

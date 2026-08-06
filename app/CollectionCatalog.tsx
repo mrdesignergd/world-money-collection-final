@@ -44,6 +44,9 @@ const kazakhstanCoinGroups: readonly KazakhstanCoinGroup[] = [
   "kazakhstanSevenTreasures",
   "kazakhstanSakaStyle",
   "kazakhstanCities",
+  "kazakhstanFairyTales",
+  "kazakhstanAnimals",
+  "kazakhstanWildlife",
   "kazakhstanCirculation",
 ];
 

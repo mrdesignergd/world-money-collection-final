@@ -1,4 +1,4 @@
-import type { LocalizedList, LocalizedText } from "./translations";
+﻿import type { Language, LocalizedList, LocalizedText } from "./translations";
 
 export type CollectionCategory = "coin" | "banknote" | "blister";
 export type CollectionGroup = "regular" | "specialTerritories" | "historicalStates";
@@ -10,6 +10,9 @@ export type KazakhstanCoinGroup =
   | "kazakhstanSevenTreasures"
   | "kazakhstanSakaStyle"
   | "kazakhstanCities"
+  | "kazakhstanFairyTales"
+  | "kazakhstanAnimals"
+  | "kazakhstanWildlife"
   | "kazakhstanCirculation";
 
 export type Continent =
@@ -334,6 +337,8 @@ function kazakhstanCoin(
   title: LocalizedText,
   nominalText: LocalizedText,
   years: string[] = ["—"],
+  imageBasePath?: string,
+  extraTags?: Partial<Record<Language, string[]>>,
 ): CoinSeed {
   return {
     coinGroup,
@@ -348,10 +353,11 @@ function kazakhstanCoin(
       en: `A Kazakh coin from my collection: ${title.en}.`,
     },
     tags: {
-      ru: ["Казахстан", title.ru, nominalText.ru, "монета"],
-      kz: ["Қазақстан", title.kz, nominalText.kz, "монета"],
-      en: ["Kazakhstan", title.en, nominalText.en, "coin"],
+      ru: ["Казахстан", title.ru, nominalText.ru, "монета", ...(extraTags?.ru ?? [])],
+      kz: ["Қазақстан", title.kz, nominalText.kz, "монета", ...(extraTags?.kz ?? [])],
+      en: ["Kazakhstan", title.en, nominalText.en, "coin", ...(extraTags?.en ?? [])],
     },
+    ...(imageBasePath ? coinImages(imageBasePath) : {}),
   };
 }
 
@@ -364,21 +370,24 @@ function kazakhstanThemedCoin(
   kzNominal: string,
   enNominal: string,
   year?: string,
+  imageBasePath?: string,
 ): CoinSeed {
   return kazakhstanCoin(
     coinGroup,
     localized(`${ruName} — ${ruNominal}`, `${kzName} — ${kzNominal}`, `${enName} — ${enNominal}`),
     localized(ruNominal, kzNominal, enNominal),
     year ? [year] : ["—"],
+    imageBasePath,
   );
 }
 
-function kazakhstanCirculationCoin(ruNominal: string, kzNominal: string, enNominal: string, year: string): CoinSeed {
+function kazakhstanCirculationCoin(ruNominal: string, kzNominal: string, enNominal: string, year: string, imageBasePath?: string): CoinSeed {
   return kazakhstanCoin(
     "kazakhstanCirculation",
     localized(ruNominal, kzNominal, enNominal),
     localized(ruNominal, kzNominal, enNominal),
     [year],
+    imageBasePath,
   );
 }
 
@@ -501,75 +510,135 @@ const coinSeeds: CoinSeed[] = [
   { continent: "asia", countryKey: "uzbekistan", nominal: "100 сум", years: ["2018"], ...coinImages("/images/coins/uzbekistan/uzbekistan-100-som-2018") },
   { continent: "asia", countryKey: "uzbekistan", nominal: "200 сум", years: ["2018"], ...coinImages("/images/coins/uzbekistan/uzbekistan-200-som-2018") },
   { continent: "asia", countryKey: "uzbekistan", nominal: "500 сум", years: ["2018"], ...coinImages("/images/coins/uzbekistan/uzbekistan-500-som-2018") },
-  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Магжан Жумабаев", "Мағжан Жұмабаев", "Magzhan Zhumabayev", "50 тенге", "50 теңге", "50 tenge", "2013"),
-  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Ильяс Есенберлин", "Ілияс Есенберлин", "Ilyas Esenberlin", "50 тенге", "50 теңге", "50 tenge", "2015"),
-  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Абай Кунанбаев", "Абай Құнанбаев", "Abai Qunanbaiuly", "100 тенге", "100 теңге", "100 tenge", "2020"),
-  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Суюнбай", "Сүйінбай", "Suyinbai", "200 тенге", "200 теңге", "200 tenge", "2023"),
-  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Курмангазы", "Құрманғазы", "Kurmangazy", "200 тенге", "200 теңге", "200 tenge", "2023"),
-  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Аль-Фараби", "Әл-Фараби", "Al-Farabi", "200 тенге", "200 теңге", "200 tenge", "2023"),
-  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Динмухамед Кунаев", "Дінмұхаммед Қонаев", "Dinmukhamed Kunayev", "50 тенге", "50 теңге", "50 tenge", "2012"),
-  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Жумабек Ташенов", "Жұмабек Ташенов", "Zhumabek Tashenov", "50 тенге", "50 теңге", "50 tenge", "2015"),
-  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Жамбыл Жабаев", "Жамбыл Жабаев", "Zhambyl Zhabayev", "20 тенге", "20 теңге", "20 tenge", "1996"),
-  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Махамбет Утемисулы", "Махамбет Өтемісұлы", "Makhambet Utemisuly", "50 тенге", "50 теңге", "50 tenge", "2003"),
-  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Аль-Фараби", "Әл-Фараби", "Al-Farabi", "20 тенге", "20 теңге", "20 tenge", "1993"),
-  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Шокан Уалиханов", "Шоқан Уәлиханов", "Shoqan Walikhanov", "50 тенге", "50 теңге", "50 tenge", "2014"),
-  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Алихан Бокейханов", "Алихан Бөкейханов", "Alikhan Bokeikhanov", "100 тенге", "100 теңге", "100 tenge", "2016"),
-  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Абулхаир", "Әбілхайыр", "Abulkhair", "100 тенге", "100 теңге", "100 tenge", "2016"),
-  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Малик Габдуллин", "Мәлік Ғабдуллин", "Malik Gabdullin", "50 тенге", "50 теңге", "50 tenge", "2015"),
-  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Алькей Маргулан", "Әлкей Марғұлан", "Alkey Margulan", "50 тенге", "50 теңге", "50 tenge", "2004"),
-  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Кожанасыр", "Қожанасыр", "Kozhanasyr", "50 тенге", "50 теңге", "50 tenge", "2015"),
-  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Тарас Шевченко", "Тарас Шевченко", "Taras Shevchenko", "50 тенге", "50 теңге", "50 tenge", "2014"),
-  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Хамит Ергали", "Хамит Ерғали", "Khamit Yergali", "100 тенге", "100 теңге", "100 tenge", "2016"),
-  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Токтагали Жангелдин", "Тоқтағали Жангелдин", "Toktagali Zhangeldin", "100 тенге", "100 теңге", "100 tenge", "2016"),
-  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Ермукан Бекмаханов", "Ермұқан Бекмаханов", "Yermukhan Bekmakhanov", "50 тенге", "50 теңге", "50 tenge", "2015"),
+  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Магжан Жумабаев", "Мағжан Жұмабаев", "Magzhan Zhumabayev", "50 тенге", "50 теңге", "50 tenge", "2013", "/images/coins/kazakhstan/kazakhstan-magzhan-zhumabayev-50-tenge-2013"),
+  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Ильяс Есенберлин", "Ілияс Есенберлин", "Ilyas Esenberlin", "50 тенге", "50 теңге", "50 tenge", "2015", "/images/coins/kazakhstan/kazakhstan-ilyas-yesenberlin-50-tenge-2015"),
+  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Абай Кунанбаев", "Абай Құнанбаев", "Abai Qunanbaiuly", "100 тенге", "100 теңге", "100 tenge", "2020", "/images/coins/kazakhstan/kazakhstan-abai-qunanbayev-100-tenge-2020"),
+  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Суюнбай", "Сүйінбай", "Suyinbai", "200 тенге", "200 теңге", "200 tenge", "2023", "/images/coins/kazakhstan/kazakhstan-suyinbay-200-tenge-2023"),
+  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Курмангазы", "Құрманғазы", "Kurmangazy", "200 тенге", "200 теңге", "200 tenge", "2023", "/images/coins/kazakhstan/kazakhstan-qurmangazy-200-tenge-2023"),
+  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Аль-Фараби", "Әл-Фараби", "Al-Farabi", "200 тенге", "200 теңге", "200 tenge", "2023", "/images/coins/kazakhstan/kazakhstan-al-farabi-200-tenge-2023"),
+  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Динмухамед Кунаев", "Дінмұхаммед Қонаев", "Dinmukhamed Kunayev", "50 тенге", "50 теңге", "50 tenge", "2012", "/images/coins/kazakhstan/kazakhstan-dinmukhamed-qonayev-50-tenge-2012"),
+  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Жумабек Ташенов", "Жұмабек Ташенов", "Zhumabek Tashenov", "50 тенге", "50 теңге", "50 tenge", "2015", "/images/coins/kazakhstan/kazakhstan-zhumabek-tashenov-50-tenge-2015"),
+  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Жамбыл Жабаев", "Жамбыл Жабаев", "Zhambyl Zhabayev", "20 тенге", "20 теңге", "20 tenge", "1996", "/images/coins/kazakhstan/kazakhstan-zhambyl-zhabayev-20-tenge-1996"),
+  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Махамбет Утемисулы", "Махамбет Өтемісұлы", "Makhambet Utemisuly", "50 тенге", "50 теңге", "50 tenge", "2003", "/images/coins/kazakhstan/kazakhstan-makhambet-utemisuly-50-tenge-2003"),
+  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Шокан Уалиханов", "Шоқан Уәлиханов", "Shoqan Walikhanov", "50 тенге", "50 теңге", "50 tenge", "2014", "/images/coins/kazakhstan/kazakhstan-shokan-ualikhanov-50-tenge-2014"),
+  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Алихан Бокейханов", "Алихан Бөкейханов", "Alikhan Bokeikhanov", "100 тенге", "100 теңге", "100 tenge", "2016", "/images/coins/kazakhstan/kazakhstan-alikhan-bokeykhanov-100-tenge-2016"),
+  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Абулхаир", "Әбілхайыр", "Abulkhair", "100 тенге", "100 теңге", "100 tenge", "2016", "/images/coins/kazakhstan/kazakhstan-abulkhair-100-tenge-2016"),
+  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Малик Габдуллин", "Мәлік Ғабдуллин", "Malik Gabdullin", "50 тенге", "50 теңге", "50 tenge", "2015", "/images/coins/kazakhstan/kazakhstan-malik-gabdullin-50-tenge-2015"),
+  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Алькей Маргулан", "Әлкей Марғұлан", "Alkey Margulan", "50 тенге", "50 теңге", "50 tenge", "2004", "/images/coins/kazakhstan/kazakhstan-alkey-margulan-50-tenge-2004"),
+  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Тарас Шевченко", "Тарас Шевченко", "Taras Shevchenko", "50 тенге", "50 теңге", "50 tenge", "2014", "/images/coins/kazakhstan/kazakhstan-taras-shevchenko-50-tenge-2014"),
+  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Хамит Ергали", "Хамит Ерғали", "Khamit Yergali", "100 тенге", "100 теңге", "100 tenge", "2016", "/images/coins/kazakhstan/kazakhstan-khamit-ergali-100-tenge-2016"),
+  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Токтагали Жангелдин", "Тоқтағали Жангелдин", "Toktagali Zhangeldin", "100 тенге", "100 теңге", "100 tenge", "2016", "/images/coins/kazakhstan/kazakhstan-toqtagali-zhangeldin-100-tenge-2016"),
+  kazakhstanThemedCoin("kazakhstanHistoricalFigures", "Ермукан Бекмаханов", "Ермұқан Бекмаханов", "Yermukhan Bekmakhanov", "50 тенге", "50 теңге", "50 tenge", "2015", "/images/coins/kazakhstan/kazakhstan-ermukhan-bekmakhanov-50-tenge-2015"),
 
-  kazakhstanThemedCoin("kazakhstanAnniversaryDates", "70 лет Великой Победе", "Ұлы жеңіске 70 жыл", "70th anniversary of the Great Victory", "50 тенге", "50 теңге", "50 tenge", "2015"),
-  kazakhstanThemedCoin("kazakhstanAnniversaryDates", "75 лет Великой Победе", "Ұлы жеңіске 75 жыл", "75th anniversary of the Great Victory", "100 тенге", "100 теңге", "100 tenge", "2020"),
-  kazakhstanThemedCoin("kazakhstanAnniversaryDates", "30 лет Конституции", "30 жыл Конституция", "30th anniversary of the Constitution", "100 тенге", "100 теңге", "100 tenge", "2025"),
-  kazakhstanThemedCoin("kazakhstanAnniversaryDates", "80 лет Победы", "80 жыл Жеңіс", "80th anniversary of Victory", "200 тенге", "200 теңге", "200 tenge", "2025"),
-  kazakhstanThemedCoin("kazakhstanAnniversaryDates", "50 лет ООН", "БҰҰ-ға 50 жыл", "50th anniversary of the UN", "20 тенге", "20 теңге", "20 tenge", "1995"),
-  kazakhstanThemedCoin("kazakhstanAnniversaryDates", "Казахское ханство", "Қазақ хандығы", "Kazakh Khanate", "50 тенге", "50 теңге", "50 tenge", "2015"),
-  kazakhstanThemedCoin("kazakhstanAnniversaryDates", "1500 лет Туркестану", "Түркістан 1500 жыл", "1500th anniversary of Turkistan", "50 тенге", "50 теңге", "50 tenge", "2000"),
-  kazakhstanThemedCoin("kazakhstanAnniversaryDates", "20 лет Желтоксану", "Желтоқсан 20 жыл", "20th anniversary of Jeltoqsan", "50 тенге", "50 теңге", "50 tenge", "2006"),
+  kazakhstanThemedCoin("kazakhstanAnniversaryDates", "70 лет Великой Победе", "Ұлы жеңіске 70 жыл", "70th anniversary of the Great Victory", "50 тенге", "50 теңге", "50 tenge", "2015", "/images/coins/kazakhstan/kazakhstan-victory-70-years-50-tenge-2015"),
+  kazakhstanThemedCoin("kazakhstanAnniversaryDates", "75 лет Великой Победе", "Ұлы жеңіске 75 жыл", "75th anniversary of the Great Victory", "100 тенге", "100 теңге", "100 tenge", "2020", "/images/coins/kazakhstan/kazakhstan-victory-75-years-100-tenge-2020"),
+  kazakhstanThemedCoin("kazakhstanAnniversaryDates", "30 лет Конституции", "30 жыл Конституция", "30th anniversary of the Constitution", "100 тенге", "100 теңге", "100 tenge", "2025", "/images/coins/kazakhstan/kazakhstan-constitution-30-years-100-tenge-2025"),
+  kazakhstanThemedCoin("kazakhstanAnniversaryDates", "80 лет Победы", "80 жыл Жеңіс", "80th anniversary of Victory", "200 тенге", "200 теңге", "200 tenge", "2025", "/images/coins/kazakhstan/kazakhstan-victory-80-years-200-tenge-2025"),
+  kazakhstanThemedCoin("kazakhstanAnniversaryDates", "50 лет ООН", "БҰҰ-ға 50 жыл", "50th anniversary of the UN", "20 тенге", "20 теңге", "20 tenge", "1995", "/images/coins/kazakhstan/kazakhstan-un-50-years-20-tenge-1995"),
+  kazakhstanThemedCoin("kazakhstanAnniversaryDates", "Казахское ханство", "Қазақ хандығы", "Kazakh Khanate", "50 тенге", "50 теңге", "50 tenge", "2015", "/images/coins/kazakhstan/kazakhstan-kazakh-khanate-50-tenge-2015"),
+  kazakhstanThemedCoin("kazakhstanAnniversaryDates", "1500 лет Туркестану", "Түркістан 1500 жыл", "1500th anniversary of Turkistan", "50 тенге", "50 теңге", "50 tenge", "2000", "/images/coins/kazakhstan/kazakhstan-turkistan-1500-years-50-tenge-2000"),
+  kazakhstanThemedCoin("kazakhstanAnniversaryDates", "20 лет Желтоксану", "Желтоқсан 20 жыл", "20th anniversary of Jeltoqsan", "50 тенге", "50 теңге", "50 tenge", "2006", "/images/coins/kazakhstan/kazakhstan-zheltoksan-20-years-50-tenge-2006"),
 
-  kazakhstanThemedCoin("kazakhstanHistory", "Тайказан", "Тайқазан", "Taikazan", "50 тенге", "50 теңге", "50 tenge", "2014"),
-  kazakhstanThemedCoin("kazakhstanHistory", "Аполлон-Союз", "Аполлон-Союз", "Apollo-Soyuz", "50 тенге", "50 теңге", "50 tenge", "2009"),
-  kazakhstanThemedCoin("kazakhstanHistory", "Луноход", "Луноход", "Lunokhod", "50 тенге", "50 теңге", "50 tenge", "2010"),
+  kazakhstanThemedCoin("kazakhstanHistory", "Тайказан", "Тайқазан", "Taikazan", "50 тенге", "50 теңге", "50 tenge", "2014", "/images/coins/kazakhstan/kazakhstan-taikazan-50-tenge-2014"),
+  kazakhstanThemedCoin("kazakhstanHistory", "Аполлон-Союз", "Аполлон-Союз", "Apollo-Soyuz", "50 тенге", "50 теңге", "50 tenge", "2009", "/images/coins/kazakhstan/kazakhstan-50-tenge-apollo-soyuz-2009"),
+  kazakhstanThemedCoin("kazakhstanHistory", "Луноход", "Луноход", "Lunokhod", "50 тенге", "50 теңге", "50 tenge", "2010", "/images/coins/kazakhstan/kazakhstan-lunokhod-50-tenge-2010"),
 
-  kazakhstanThemedCoin("kazakhstanTraditions", "Жар-жар", "Жар-жар", "Zhar-zhar", "200 тенге", "200 теңге", "200 tenge", "2023"),
-  kazakhstanThemedCoin("kazakhstanTraditions", "Тусау кесу", "Тұсау кесу", "Tusau kesu", "50 тенге", "50 теңге", "50 tenge", "2007"),
-  kazakhstanThemedCoin("kazakhstanTraditions", "Наурыз мейрамы", "Наурыз мейрамы", "Nauryz holiday", "50 тенге", "50 теңге", "50 tenge", "2012"),
-  kazakhstanThemedCoin("kazakhstanTraditions", "Ерулик", "Ерулік", "Yerulik", "200 тенге", "200 теңге", "200 tenge", "2024"),
-  kazakhstanThemedCoin("kazakhstanTraditions", "Казах куреси", "Қазақ күресі", "Kazakh kuresi", "200 тенге", "200 теңге", "200 tenge", "2025"),
+  kazakhstanThemedCoin("kazakhstanTraditions", "Жар-жар", "Жар-жар", "Zhar-zhar", "200 тенге", "200 теңге", "200 tenge", "2023", "/images/coins/kazakhstan/kazakhstan-zhar-zhar-200-tenge-2023"),
+  kazakhstanThemedCoin("kazakhstanTraditions", "Тусау кесу", "Тұсау кесу", "Tusau kesu", "50 тенге", "50 теңге", "50 tenge", "2007", "/images/coins/kazakhstan/kazakhstan-tusau-kesu-50-tenge-2007"),
+  kazakhstanThemedCoin("kazakhstanTraditions", "Наурыз мейрамы", "Наурыз мейрамы", "Nauryz holiday", "50 тенге", "50 теңге", "50 tenge", "2012", "/images/coins/kazakhstan/kazakhstan-nauryz-50-tenge-2012"),
+  kazakhstanThemedCoin("kazakhstanTraditions", "Суйиндир", "Сүйіндір", "Suyindir", "50 тенге", "50 теңге", "50 tenge", "2013", "/images/coins/kazakhstan/kazakhstan-50-tenge-suyindir-2013"),
+  kazakhstanThemedCoin("kazakhstanTraditions", "Ерулик", "Ерулік", "Yerulik", "200 тенге", "200 теңге", "200 tenge", "2024", "/images/coins/kazakhstan/kazakhstan-erulik-200-tenge-2024"),
+  kazakhstanThemedCoin("kazakhstanTraditions", "Казах куреси", "Қазақ күресі", "Kazakh kuresi", "200 тенге", "200 теңге", "200 tenge", "2025", "/images/coins/kazakhstan/kazakhstan-kazakh-kuresi-200-tenge-2025"),
 
-  kazakhstanThemedCoin("kazakhstanSevenTreasures", "Ер жигит", "Ер жігіт", "Er zhigit", "100 тенге", "100 теңге", "100 tenge"),
-  kazakhstanThemedCoin("kazakhstanSevenTreasures", "Сулу айел", "Сұлу әйел", "Sulu ayel", "100 тенге", "100 теңге", "100 tenge"),
-  kazakhstanThemedCoin("kazakhstanSevenTreasures", "Кумай тазы", "Құмай тазы", "Kumai tazy", "100 тенге", "100 теңге", "100 tenge"),
-  kazakhstanThemedCoin("kazakhstanSevenTreasures", "Жуйрик ат", "Жүйрік ат", "Zhuyrik at", "100 тенге", "100 теңге", "100 tenge"),
-  kazakhstanThemedCoin("kazakhstanSevenTreasures", "Акылы билим", "Ақыл білім", "Akyl bilim", "100 тенге", "100 теңге", "100 tenge"),
-  kazakhstanThemedCoin("kazakhstanSevenTreasures", "Берен мылтык", "Берен мылтық", "Beren myltyk", "100 тенге", "100 теңге", "100 tenge"),
-  kazakhstanThemedCoin("kazakhstanSevenTreasures", "Кыран буркит", "Қыран бүркіт", "Kyran burkit", "100 тенге", "100 теңге", "100 tenge"),
+  kazakhstanThemedCoin("kazakhstanSevenTreasures", "Ер жигит", "Ер жігіт", "Er zhigit", "100 тенге", "100 теңге", "100 tenge", undefined, "/images/coins/kazakhstan/kazakhstan-er-zhigit-100-tenge"),
+  kazakhstanThemedCoin("kazakhstanSevenTreasures", "Сулу айел", "Сұлу әйел", "Sulu ayel", "100 тенге", "100 теңге", "100 tenge", undefined, "/images/coins/kazakhstan/kazakhstan-sulu-ayel-100-tenge"),
+  kazakhstanThemedCoin("kazakhstanSevenTreasures", "Кумай тазы", "Құмай тазы", "Kumai tazy", "100 тенге", "100 теңге", "100 tenge", undefined, "/images/coins/kazakhstan/kazakhstan-qumai-tazy-100-tenge"),
+  kazakhstanThemedCoin("kazakhstanSevenTreasures", "Жуйрик ат", "Жүйрік ат", "Zhuyrik at", "100 тенге", "100 теңге", "100 tenge", undefined, "/images/coins/kazakhstan/kazakhstan-zhuyrik-at-100-tenge"),
+  kazakhstanThemedCoin("kazakhstanSevenTreasures", "Акылы билим", "Ақыл білім", "Akyl bilim", "100 тенге", "100 теңге", "100 tenge", undefined, "/images/coins/kazakhstan/kazakhstan-aqyl-bilim-100-tenge"),
+  kazakhstanThemedCoin("kazakhstanSevenTreasures", "Берен мылтык", "Берен мылтық", "Beren myltyk", "100 тенге", "100 теңге", "100 tenge", undefined, "/images/coins/kazakhstan/kazakhstan-beren-myltyq-100-tenge"),
+  kazakhstanThemedCoin("kazakhstanSevenTreasures", "Кыран буркит", "Қыран бүркіт", "Kyran burkit", "100 тенге", "100 теңге", "100 tenge", undefined, "/images/coins/kazakhstan/kazakhstan-qyran-burkit-100-tenge"),
 
-  kazakhstanThemedCoin("kazakhstanSakaStyle", "Крылатый барс", "Қанатты барыс", "Winged snow leopard", "100 тенге", "100 теңге", "100 tenge"),
-  kazakhstanThemedCoin("kazakhstanSakaStyle", "Маска", "Маска", "Mask", "100 тенге", "100 теңге", "100 tenge"),
-  kazakhstanThemedCoin("kazakhstanSakaStyle", "Свернувшийся барс", "Бүктетілген барыс", "Curled snow leopard", "100 тенге", "100 теңге", "100 tenge"),
-  kazakhstanThemedCoin("kazakhstanSakaStyle", "Золотое украшение в виде оленя", "Бұғы түріндегі алтын әшекей", "Gold deer-shaped ornament", "100 тенге", "100 теңге", "100 tenge"),
-  kazakhstanThemedCoin("kazakhstanSakaStyle", "Олень", "Бұғы", "Deer", "100 тенге", "100 теңге", "100 tenge"),
+  kazakhstanThemedCoin("kazakhstanSakaStyle", "Крылатый барс", "Қанатты барыс", "Winged snow leopard", "100 тенге", "100 теңге", "100 tenge", undefined, "/images/coins/kazakhstan/kazakhstan-winged-snow-leopard-100-tenge"),
+  kazakhstanThemedCoin("kazakhstanSakaStyle", "Маска", "Маска", "Mask", "100 тенге", "100 теңге", "100 tenge", undefined, "/images/coins/kazakhstan/kazakhstan-mask-100-tenge"),
+  kazakhstanThemedCoin("kazakhstanSakaStyle", "Свернувшийся барс", "Бүктетілген барыс", "Curled snow leopard", "100 тенге", "100 теңге", "100 tenge", undefined, "/images/coins/kazakhstan/kazakhstan-curled-snow-leopard-100-tenge"),
+  kazakhstanThemedCoin("kazakhstanSakaStyle", "Золотое украшение в виде оленя", "Бұғы түріндегі алтын әшекей", "Gold deer-shaped ornament", "100 тенге", "100 теңге", "100 tenge", undefined, "/images/coins/kazakhstan/kazakhstan-golden-deer-decoration-100-tenge"),
+  kazakhstanThemedCoin("kazakhstanSakaStyle", "Олень", "Бұғы", "Deer", "100 тенге", "100 теңге", "100 tenge", undefined, "/images/coins/kazakhstan/kazakhstan-deer-100-tenge"),
 
-  kazakhstanThemedCoin("kazakhstanCities", "Атырау", "Атырау", "Atyrau", "50 тенге", "50 теңге", "50 tenge", "2012"),
-  kazakhstanThemedCoin("kazakhstanCities", "Актау", "Ақтау", "Aktau", "50 тенге", "50 теңге", "50 tenge", "2012"),
-  kazakhstanThemedCoin("kazakhstanCities", "Павлодар", "Павлодар", "Pavlodar", "50 тенге", "50 теңге", "50 tenge", "2012"),
+  kazakhstanThemedCoin("kazakhstanCities", "Атырау", "Атырау", "Atyrau", "50 тенге", "50 теңге", "50 tenge", "2012", "/images/coins/kazakhstan/kazakhstan-atyrau-50-tenge-2012"),
+  kazakhstanThemedCoin("kazakhstanCities", "Актау", "Ақтау", "Aktau", "50 тенге", "50 теңге", "50 tenge", "2012", "/images/coins/kazakhstan/kazakhstan-aktau-50-tenge-2012"),
+  kazakhstanThemedCoin("kazakhstanCities", "Павлодар", "Павлодар", "Pavlodar", "50 тенге", "50 теңге", "50 tenge", "2012", "/images/coins/kazakhstan/kazakhstan-pavlodar-50-tenge-2012"),
 
-  kazakhstanCirculationCoin("1 тенге", "1 теңге", "1 tenge", "1993"),
-  kazakhstanCirculationCoin("3 тенге", "3 теңге", "3 tenge", "1993"),
-  kazakhstanCirculationCoin("5 тенге", "5 теңге", "5 tenge", "1993"),
-  kazakhstanCirculationCoin("20 тенге", "20 теңге", "20 tenge", "1993"),
-  kazakhstanCirculationCoin("2 тиын", "2 тиын", "2 tiyn", "1993"),
-  kazakhstanCirculationCoin("5 тиын", "5 тиын", "5 tiyn", "1993"),
-  kazakhstanCirculationCoin("10 тенге", "10 теңге", "10 tenge", "1993"),
-  kazakhstanCirculationCoin("10 тиын", "10 тиын", "10 tiyn", "1993"),
-  kazakhstanCirculationCoin("20 тиын", "20 тиын", "20 tiyn", "1993"),
-  kazakhstanCirculationCoin("50 тиын", "50 тиын", "50 tiyn", "1993"),
+  kazakhstanThemedCoin("kazakhstanFairyTales", "Кегоглан — турецкая сказка", "Кегоглан — түрік ертегісі", "Kegoglan — Turkish fairy tale", "200 тенге", "200 теңге", "200 tenge", "2023", "/images/coins/kazakhstan/kazakhstan-200-tenge-kegoglan-turkish-fairy-tale-2023"),
+  kazakhstanThemedCoin("kazakhstanFairyTales", "Кожанасыр", "Қожанасыр", "Kozhanasyr", "50 тенге", "50 теңге", "50 tenge", "2015", "/images/coins/kazakhstan/kazakhstan-qozhanasyr-50-tenge-2015"),
+
+  kazakhstanCoin(
+    "kazakhstanAnimals",
+    localized("50 тенге Манул 2014", "50 теңге Сабаншы 2014", "50 tenge Pallas's cat 2014"),
+    localized("50 тенге", "50 теңге", "50 tenge"),
+    ["2014"],
+    "/images/coins/kazakhstan/kazakhstan-50-tenge-sabanshy-2014",
+    {
+      ru: ["Сабаншы", "Манул", "Животные", "50 тенге", "2014"],
+      kz: ["Сабаншы", "Жануарлар", "50 теңге", "2014"],
+      en: ["Pallas's cat", "Pallas cat", "Sabanshy", "Animals", "50 tenge", "2014"],
+    },
+  ),
+  kazakhstanThemedCoin("kazakhstanAnimals", "Устюрт муфлоны", "Үстірт муфлоны", "Ustyurt mouflon", "50 тенге", "50 теңге", "50 tenge", "2015", "/images/coins/kazakhstan/kazakhstan-50-tenge-ustyurt-mouflon-2015"),
+
+  kazakhstanCoin(
+    "kazakhstanWildlife",
+    localized("100 тенге AQBOKEN — Сайгак 2025", "100 теңге AQBOKEN — Ақбөкен 2025", "100 tenge AQBOKEN — Saiga 2025"),
+    localized("100 тенге", "100 теңге", "100 tenge"),
+    ["2025"],
+    "/images/coins/kazakhstan/kazakhstan-100-tenge-aqboken-saiga-2025",
+  ),
+  kazakhstanCoin(
+    "kazakhstanWildlife",
+    localized("100 тенге ARQAR — Архар 2025", "100 теңге ARQAR — Арқар 2025", "100 tenge ARQAR — Argali 2025"),
+    localized("100 тенге", "100 теңге", "100 tenge"),
+    ["2025"],
+    "/images/coins/kazakhstan/kazakhstan-100-tenge-arqar-argali-2025",
+  ),
+  kazakhstanCoin(
+    "kazakhstanWildlife",
+    localized("100 тенге BARYS — Снежный барс 2025", "100 теңге BARYS — Барыс 2025", "100 tenge BARYS — Snow leopard 2025"),
+    localized("100 тенге", "100 теңге", "100 tenge"),
+    ["2025"],
+    "/images/coins/kazakhstan/kazakhstan-100-tenge-barys-snow-leopard-2025",
+  ),
+  kazakhstanCoin(
+    "kazakhstanWildlife",
+    localized("100 тенге DYADAQ — Дрофа 2025", "100 теңге DYADAQ — Дуадақ 2025", "100 tenge DYADAQ — Bustard 2025"),
+    localized("100 тенге", "100 теңге", "100 tenge"),
+    ["2025"],
+    "/images/coins/kazakhstan/kazakhstan-100-tenge-dyadaq-bustard-2025",
+  ),
+  kazakhstanCoin(
+    "kazakhstanWildlife",
+    localized("100 тенге SUNQAR — Сокол 2025", "100 теңге SUNQAR — Сұңқар 2025", "100 tenge SUNQAR — Falcon 2025"),
+    localized("100 тенге", "100 теңге", "100 tenge"),
+    ["2025"],
+    "/images/coins/kazakhstan/kazakhstan-100-tenge-sunqar-falcon-2025",
+  ),
+
+  kazakhstanCirculationCoin("200 тенге", "200 теңге", "200 tenge", "2020", "/images/coins/kazakhstan/kazakhstan-200-tenge-2020"),
+  kazakhstanCirculationCoin("100 тенге", "100 теңге", "100 tenge", "2005", "/images/coins/kazakhstan/kazakhstan-100-tenge-2005"),
+  kazakhstanCirculationCoin("50 тенге", "50 теңге", "50 tenge", "2006", "/images/coins/kazakhstan/kazakhstan-50-tenge-2006"),
+  kazakhstanCirculationCoin("20 тенге", "20 теңге", "20 tenge", "1997", "/images/coins/kazakhstan/kazakhstan-20-tenge-1997"),
+  kazakhstanCirculationCoin("10 тенге", "10 теңге", "10 tenge", "2012", "/images/coins/kazakhstan/kazakhstan-10-tenge-2012"),
+  kazakhstanCirculationCoin("5 тенге", "5 теңге", "5 tenge", "2002", "/images/coins/kazakhstan/kazakhstan-5-tenge-2002"),
+  kazakhstanCirculationCoin("2 тенге", "2 теңге", "2 tenge", "2006", "/images/coins/kazakhstan/kazakhstan-2-tenge-2006"),
+  kazakhstanCirculationCoin("1 тенге", "1 теңге", "1 tenge", "2004", "/images/coins/kazakhstan/kazakhstan-1-tenge-2004"),
+  kazakhstanCirculationCoin("1 тенге", "1 теңге", "1 tenge", "1993", "/images/coins/kazakhstan/kazakhstan-1-tenge-1993"),
+  kazakhstanCirculationCoin("3 тенге", "3 теңге", "3 tenge", "1993", "/images/coins/kazakhstan/kazakhstan-3-tenge-1993"),
+  kazakhstanCirculationCoin("5 тенге", "5 теңге", "5 tenge", "1993", "/images/coins/kazakhstan/kazakhstan-5-tenge-1993"),
+  kazakhstanCirculationCoin("20 тенге", "20 теңге", "20 tenge", "1993", "/images/coins/kazakhstan/kazakhstan-20-tenge-1993"),
+  kazakhstanCirculationCoin("2 тиын", "2 тиын", "2 tiyn", "1993", "/images/coins/kazakhstan/kazakhstan-2-tiin-1993"),
+  kazakhstanCirculationCoin("5 тиын", "5 тиын", "5 tiyn", "1993", "/images/coins/kazakhstan/kazakhstan-5-tiin-1993"),
+  kazakhstanCirculationCoin("10 тенге", "10 теңге", "10 tenge", "1993", "/images/coins/kazakhstan/kazakhstan-10-tenge-1993"),
+  kazakhstanCirculationCoin("10 тиын", "10 тиын", "10 tiyn", "1993", "/images/coins/kazakhstan/kazakhstan-10-tiin-1993"),
+  kazakhstanCirculationCoin("20 тиын", "20 тиын", "20 tiyn", "1993", "/images/coins/kazakhstan/kazakhstan-20-tiin-1993"),
+  kazakhstanCirculationCoin("50 тиын", "50 тиын", "50 tiyn", "1993", "/images/coins/kazakhstan/kazakhstan-50-tiin-1993"),
   {
     continent: "asia",
     countryKey: "southKorea",
@@ -1416,3 +1485,6 @@ const moneyItems: MoneyItem[] = moneySeeds.flatMap((seed, seedIndex) =>
 );
 
 export const collection: CollectionItem[] = [...moneyItems, ...blisterItems];
+
+
+

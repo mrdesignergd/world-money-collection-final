@@ -413,6 +413,21 @@ export const translations = {
       kz: "Қазақстан қалалары",
       en: "Cities of Kazakhstan",
     },
+    kazakhstanFairyTales: {
+      ru: "Сказки",
+      kz: "Ертегілер",
+      en: "Fairy tales",
+    },
+    kazakhstanAnimals: {
+      ru: "Животные",
+      kz: "Жануарлар",
+      en: "Animals",
+    },
+    kazakhstanWildlife: {
+      ru: "Животный мир Казахстана",
+      kz: "Қазақстанның жануарлар әлемі",
+      en: "Wildlife of Kazakhstan",
+    },
     kazakhstanCirculation: {
       ru: "Оборотные монеты",
       kz: "Айналым монеталары",

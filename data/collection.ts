@@ -1631,20 +1631,90 @@ const blisterSeeds: BlisterSeed[] = [
   blisterSeed("blister-sets", "Футбольные команды Казахстана", "Қазақстанның футбол командалары", "Football teams of Kazakhstan"),
 ];
 
-const blisterItems: BlisterItem[] = blisterSeeds.map((seed, index) => ({
-  id: `blister-${seed.theme}-${slug(seed.title.en)}-${index + 1}`,
-  category: "blister",
-  collectionGroup: "regular",
-  theme: seed.theme,
-  title: seed.title,
-  description: blisterDescription(seed),
-  image: "",
-  imageFront: seed.imageFront ?? "",
-  imageBack: seed.imageBack ?? "",
-  addedAt: "2026-07-19",
-  updatedAt: "2026-07-19",
-  tags: blisterTags(seed),
-}));
+function blisterImageSet(theme: BlisterTheme, fileSlug: string): Pick<BlisterSeed, "imageFront" | "imageBack"> {
+  return {
+    imageFront: `/images/blisters/${theme}/${fileSlug}-blister-avers.jpg`,
+    imageBack: `/images/blisters/${theme}/${fileSlug}-blister-revers.jpg`,
+  };
+}
+
+const blisterImageOverrides: Record<string, Pick<BlisterSeed, "imageFront" | "imageBack">> = {
+  "abylai-khan": blisterImageSet("figures", "abylai-khan"),
+  "abai-qunanbaiuly": blisterImageSet("figures", "abai-qunanbaiuly"),
+  "zhuban-moldagaliyev": blisterImageSet("figures", "zhuban-moldagaliyev"),
+  "zhambyl-zhabayev": blisterImageSet("figures", "zhambyl-zhabayev"),
+  "temirbek-zhurgenov": blisterImageSet("figures", "temirbek-zhurgenov"),
+  "kanysh-satbayev": blisterImageSet("figures", "kanysh-satbayev"),
+  "kemel-akishev": blisterImageSet("figures", "kemel-akishev"),
+  "rakhimzhan-koshkarbayev": blisterImageSet("figures", "rakhimzhan-koshkarbayev"),
+  "sagadat-nurmagambetov": blisterImageSet("figures", "sagadat-nurmagambetov"),
+  "jochi-khan": blisterImageSet("figures", "jochi-khan"),
+  "evnei-buketov": blisterImageSet("figures", "evnei-buketov"),
+  "aliya-moldagulova": blisterImageSet("figures", "aliya-moldagulova"),
+  "yermek-serkebayev": blisterImageSet("figures", "yermek-serkebayev"),
+  "kazhymukan": blisterImageSet("figures", "kazhymukan"),
+  "roza-baglanova": blisterImageSet("figures", "roza-baglanova"),
+  "akhmet-baitursynuly": blisterImageSet("figures", "akhmet-baitursynuly"),
+  "talgat-bigeldinov": blisterImageSet("figures", "talgat-bigeldinov"),
+  "mukhtar-auezov": blisterImageSet("figures", "mukhtar-auezov"),
+  "manshuk-mametova": blisterImageSet("figures", "manshuk-mametova"),
+  "kyz-uzatu": blisterImageSet("traditions", "kyz-uzatu"),
+  "sundet-toi": blisterImageSet("traditions", "sundet-toi"),
+  "tilashar": blisterImageSet("traditions", "tilashar"),
+  "zhar-zhar": blisterImageSet("traditions", "zhar-zhar"),
+  "erulik": blisterImageSet("traditions", "erulik"),
+  "ainalayin": blisterImageSet("traditions", "ainalayin"),
+  "sable": blisterImageSet("animals", "sable"),
+  "eagle-owl": blisterImageSet("animals", "eagle-owl"),
+  "swan": blisterImageSet("animals", "swan"),
+  "golden-eagle": blisterImageSet("animals", "golden-eagle"),
+  "balkhash-perch": blisterImageSet("animals", "balkhash-perch"),
+  "keloaglan": blisterImageSet("animals", "keloaglan"),
+  "camel": blisterImageSet("animals", "camel"),
+  "bear": blisterImageSet("animals", "bear"),
+  "white-water-lily": blisterImageSet("animals", "white-water-lily"),
+  "argamak-horse": blisterImageSet("animals", "argamak-horse"),
+  "togyzkumalak": blisterImageSet("sport", "togyzkumalak"),
+  "kazakh-kures": blisterImageSet("sport", "kazakh-kures"),
+  "kairat-almaty": blisterImageSet("sport", "kairat-almaty"),
+  "astana-astana": blisterImageSet("sport", "astana-astana"),
+  "aktobe-aktobe": blisterImageSet("sport", "aktobe-aktobe"),
+  "ordabasy-shymkent": blisterImageSet("sport", "ordabasy-shymkent"),
+  "tobol-kostanay": blisterImageSet("sport", "tobol-kostanay"),
+  "elimai-semey": blisterImageSet("sport", "elimai-semey"),
+  "kaisar-kyzylorda": blisterImageSet("sport", "kaisar-kyzylorda"),
+  "zhetysu-taldykorgan": blisterImageSet("sport", "zhetysu-taldykorgan"),
+  "atyrau-atyrau": blisterImageSet("sport", "atyrau-atyrau"),
+  "zhenis-astana": blisterImageSet("sport", "zhenis-astana"),
+  "turan-turkistan": blisterImageSet("sport", "turan-turkistan"),
+  "shakhter-karaganda": blisterImageSet("sport", "shakhter-karaganda"),
+  "kyzylzhar-petropavl": blisterImageSet("sport", "kyzylzhar-petropavl"),
+  "20-years-of-astana": blisterImageSet("events", "astana-20-years"),
+  "25-years-of-the-tenge": blisterImageSet("events", "tenge-25-years"),
+  "25-years-of-astana": blisterImageSet("events", "astana-25-years"),
+  "picture-of-the-world": blisterImageSet("events", "picture-of-the-world"),
+};
+
+const blisterItems: BlisterItem[] = blisterSeeds.map((seed, index) => {
+  const blisterImages = blisterImageOverrides[slug(seed.title.en)];
+  const imageFront = blisterImages?.imageFront ?? seed.imageFront ?? "";
+  const imageBack = blisterImages?.imageBack ?? seed.imageBack ?? "";
+
+  return {
+    id: `blister-${seed.theme}-${slug(seed.title.en)}-${index + 1}`,
+    category: "blister",
+    collectionGroup: "regular",
+    theme: seed.theme,
+    title: seed.title,
+    description: blisterDescription(seed),
+    image: imageBack || imageFront,
+    imageFront,
+    imageBack,
+    addedAt: "2026-07-19",
+    updatedAt: "2026-07-19",
+    tags: blisterTags(seed),
+  };
+});
 
 
 type BanknoteImageOverride = Pick<CoinSeed, "previewImage" | "imageFront" | "imageBack">;

@@ -1639,6 +1639,16 @@ function blisterImageSet(theme: BlisterTheme, fileSlug: string): Pick<BlisterSee
 }
 
 const blisterImageOverrides: Record<string, Pick<BlisterSeed, "imageFront" | "imageBack">> = {
+  "aisha-galimbayeva": blisterImageSet("figures", "aisha-galimbayeva"),
+  "beimbet-mailin": blisterImageSet("figures", "beimbet-mailin"),
+  "ilyas-zhansugirov": blisterImageSet("figures", "ilyas-zhansugirov"),
+  "saken-seifullin": blisterImageSet("figures", "saken-seifullin"),
+  "turar-ryskulov": blisterImageSet("figures", "turar-ryskulov"),
+  "suyinshi": blisterImageSet("traditions", "suyinshi"),
+  "kokbori": blisterImageSet("animals", "kokbori"),
+  "butterfly": blisterImageSet("animals", "butterfly"),
+  "deer": blisterImageSet("animals", "deer"),
+  "kulan": blisterImageSet("animals", "kulan"),
   "abylai-khan": blisterImageSet("figures", "abylai-khan"),
   "abai-qunanbaiuly": blisterImageSet("figures", "abai-qunanbaiuly"),
   "zhuban-moldagaliyev": blisterImageSet("figures", "zhuban-moldagaliyev"),
